@@ -1,0 +1,18 @@
+{
+  "name": "documentation-site",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "next"
+  },
+  "dependencies": {
+    "isomorphic-unfetch": "^2.0.0",
+    "knex": "^0.13.0",
+    "next": "^2.4.7",
+    "pg": "^6.4.1",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1"
+  }
+}
