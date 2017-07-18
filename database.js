@@ -1,4 +1,5 @@
 var pg = require('pg');
+var Promise = require('bluebird');
 
 var knex = require('knex')({
   client: 'pg',
@@ -13,12 +14,15 @@ var knex = require('knex')({
 
 exports.knex = knex;
 
+
+// Functions to get info from the database:
+
 exports.allArticles = function() {
-  return knex('articles').select('title','url','abstract');
+  return knex('articles').select('title','url_slug','abstract');
 }
 
 exports.allProjects = function() {
-  return knex('articles').where({mainProjectPage: true}).select('title','url','abstract');
+  return knex('articles').where({project_page: true}).select('title','url_slug','abstract');
 }
 
 exports.allFiles = function() {
@@ -33,23 +37,94 @@ exports.firstUser = function() {
   return knex('users').first('*');
 }
 
+exports.getRelatedFiles = function(aid) {
+  var needed_tags = knex('articles').where({id: aid}).select('needed_tags');
+  return knex('files').whereIn(tags, needed_tags[0]).select('id', 'name', 'file_type', 'url_slug');
+}
+
+exports.getFilesOfType = function(type) {
+  return knex('files').where({file_type: type}).select('*');
+}
+
 exports.getArticleContent = function(aid) {
   return knex('articles').where({id: aid}).select('*');
 }
 
-exports.getRelatedFiles = function(aid) {
-  var neededTags = knex('articles').where({id: aid}).select('neededTags');
-  return knex('files').whereIn(tags, neededTags[0]).select('id', 'name', 'fileType', 'url');
-}
-
-exports.getFilesOfType = function(type) {
-  return knex('files').where({fileType: type}).select('*');
-}
-
 exports.getFileContent = function(fid) {
-  return knex('files').where({id: aid}).select('*');
+  return knex('files').where({id: fid}).select('*');
 }
 
 exports.getUserContent = function(uid) {
   return knex('users').where({id: uid}).select('*');
+}
+
+
+// Functions to edit info in the database:
+
+exports.createUser = function(username, first_name, last_name, article_id, profile_picture) {
+  // Using trx as a transaction object:
+  knex.transaction(function(trx) {
+    knex.insert({
+      username: username,
+      first_name: first_name,
+      last_name: last_name,
+      article_id: article_id,
+      profile_picture: profile_picture
+    })
+      .into('users')
+      .transacting(trx)
+      .then(trx.commit)
+      .catch(trx.rollback);
+  })
+  .catch(function(error) {
+    console.error(error);
+  });
+}
+
+exports.createArticle = function(title, date, author_id, content, needed_tags, tags, abtract, project_page, thumbnail, url_slug) {
+  // Using trx as a transaction object:
+  knex.transaction(function(trx) {
+    knex.insert({
+      title: title,
+      date: date,
+      author_id: author_id,
+      content: content,
+      needed_tags: needed_tags,
+      tags: tags,
+      abtract: abstract,
+      project_page: project_page,
+      thumbnail: thumbnail,
+      url_slug: url_slug
+    })
+      .into('articles')
+      .transacting(trx)
+      .then(trx.commit)
+      .catch(trx.rollback);
+  })
+  .catch(function(error) {
+    console.error(error);
+  });
+}
+
+exports.addFile = function(name, file_type, date_modified, date_created, tags, description, thumbnail_data, url_slug) {
+  // Using trx as a transaction object:
+  knex.transaction(function(trx) {
+    knex.insert({
+      name: name,
+      file_type: file_type,
+      date_modified: date_modified,
+      date_created: date_created,
+      tags: tags,
+      description: description,
+      thumbnail_data: thumbnail_data,
+      url_slug: url_slug
+    })
+      .into('articles')
+      .transacting(trx)
+      .then(trx.commit)
+      .catch(trx.rollback);
+  })
+  .catch(function(error) {
+    console.error(error);
+  });
 }
