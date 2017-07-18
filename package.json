@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "bluebird": "^3.5.0",
+    "google-auth-library": "^0.10.0",
+    "googleapis": "^20.1.0",
     "isomorphic-unfetch": "^2.0.0",
     "knex": "^0.13.0",
     "next": "^2.4.7",

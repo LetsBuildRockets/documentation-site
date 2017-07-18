@@ -3,3 +3,4 @@
 package-lock.json
 .hushlogin
 .DS_Store
+client_secret.json
