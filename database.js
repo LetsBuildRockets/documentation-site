@@ -22,7 +22,7 @@ exports.allArticles = function() {
 }
 
 exports.allProjects = function() {
-  return knex('articles').where({project_page: true}).select('title','url_slug','abstract');
+  return knex('articles').where({type: project}).select('title','url_slug','abstract');
 }
 
 exports.allFiles = function() {
@@ -30,11 +30,7 @@ exports.allFiles = function() {
 }
 
 exports.allUsers = function() {
-  return knex('users').select('*');
-}
-
-exports.firstUser = function() {
-  return knex('users').first('*');
+  return knex('users').select('users.*', 'articles.url_slug').leftJoin('articles', 'users.article_id', 'articles.id');
 }
 
 exports.getRelatedFiles = function(aid) {
@@ -46,7 +42,11 @@ exports.getFilesOfType = function(type) {
   return knex('files').where({file_type: type}).select('*');
 }
 
-exports.getArticle = function(aid) {
+exports.getArticle = function(slug) {
+  return knex('articles').where({url_slug: slug}).select('*');
+}
+
+exports.getArticleByID = function(aid) {
   return knex('articles').where({id: aid}).select('*');
 }
 
@@ -55,7 +55,7 @@ exports.getFile = function(fid) {
 }
 
 exports.getUser = function(uid) {
-  return knex('users').where({id: uid}).select('*');
+  return knex('users').where({'users.id': uid}).select('users.*', 'articles.url_slug').leftJoin('articles', 'users.article_id', 'articles.id');
 }
 
 

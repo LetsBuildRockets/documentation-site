@@ -10,28 +10,33 @@ app.prepare()
 .then(() => {
   const server = express()
 
-  server.get('/a/:id', (req, res) => {
+  server.get('/:slug', (req, res) => {
     const actualPage = '/article'
-    const queryParams = { id: req.params.id, random: "randomness" }
+    const queryParams = { slug: req.params.slug}
     app.render(req, res, actualPage, queryParams);
-    console.log(res);
   })
 
-  server.get('/api/allusers', function (req, res) {
+  server.get('/api/users', function (req, res) {
     db.allUsers().then(function(users) {
       res.json(users);
     });
   });
 
-  server.get('/api/allarticles', function (req, res) {
+  server.get('/api/articles', function (req, res) {
     db.allArticles().then(function(articles) {
       res.json(articles);
     });
   });
 
-  server.get('/api/articles/:id', function (req, res) {
-    db.getArticle(req.params.id).then(function(article) {
+  server.get('/api/articles/:slug', function (req, res) {
+    db.getArticle(req.params.slug).then(function(article) {
       res.json(article);
+    });
+  });
+
+  server.get('/api/users/:id', function (req, res) {
+    db.getUser(req.params.id).then(function(user) {
+      res.json(user);
     });
   });
 

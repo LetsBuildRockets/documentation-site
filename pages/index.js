@@ -8,7 +8,7 @@ const Index = (props) => (
     <ul>
       {props.articles.map((article) => (
         <li>
-          <Link as={`/a/${article.url_slug}`} href={`/article?id=${article.id}`}><a>{article.title}</a></Link> - {article.abstract}
+          <Link as={`/${article.url_slug}`} href={`/article?slug=${article.url_slug}`}><a>{article.title}</a></Link> - {article.abstract}
         </li>
       ))}
     </ul>
@@ -16,7 +16,7 @@ const Index = (props) => (
 )
 
 Index.getInitialProps = async function() {
-  const res = await fetch('http://localhost:3000/api/allarticles')
+  const res = await fetch('http://localhost:3000/api/articles')
   const data = await res.json()
 
   console.log(`Show data fetched. Count: ${data.length}`)
