@@ -1,0 +1,50 @@
+const express = require('express')
+const next = require('next')
+const db = require('./database');
+
+const dev = process.env.NODE_ENV !== 'production'
+const app = next({ dev })
+const handle = app.getRequestHandler()
+
+app.prepare()
+.then(() => {
+  const server = express()
+
+  server.get('/a/:id', (req, res) => {
+    const actualPage = '/article'
+    const queryParams = { id: req.params.id, random: "randomness" }
+    app.render(req, res, actualPage, queryParams);
+    console.log(res);
+  })
+
+  server.get('/api/allusers', function (req, res) {
+    db.allUsers().then(function(users) {
+      res.json(users);
+    });
+  });
+
+  server.get('/api/allarticles', function (req, res) {
+    db.allArticles().then(function(articles) {
+      res.json(articles);
+    });
+  });
+
+  server.get('/api/articles/:id', function (req, res) {
+    db.getArticle(req.params.id).then(function(article) {
+      res.json(article);
+    });
+  });
+
+  server.get('*', (req, res) => {
+    return handle(req, res)
+  })
+
+  server.listen(3000, (err) => {
+    if (err) throw err
+    console.log('> Ready on http://localhost:3000')
+  })
+})
+.catch((ex) => {
+  console.error(ex.stack)
+  process.exit(1)
+})
