@@ -46,15 +46,15 @@ exports.getFilesOfType = function(type) {
   return knex('files').where({file_type: type}).select('*');
 }
 
-exports.getArticleContent = function(aid) {
+exports.getArticle = function(aid) {
   return knex('articles').where({id: aid}).select('*');
 }
 
-exports.getFileContent = function(fid) {
+exports.getFile = function(fid) {
   return knex('files').where({id: fid}).select('*');
 }
 
-exports.getUserContent = function(uid) {
+exports.getUser = function(uid) {
   return knex('users').where({id: uid}).select('*');
 }
 
