@@ -1,14 +1,13 @@
 import Layout from '../components/MyLayout.js'
 import Link from 'next/link'
-import fetch from 'isomorphic-unfetch'
 
 const Index = (props) => (
   <Layout>
-    <h1>Articles</h1>
+    <h1>Batman TV Shows</h1>
     <ul>
-      {props.articles.map((article) => (
+      {props.users.map((user) => (
         <li>
-          <Link as={`/a/${article.url_slug}`} href={`/article?id=${article.id}`}><a>{article.title}</a></Link> - {article.abstract}
+          {user.first_name} {user.last_name}
         </li>
       ))}
     </ul>
@@ -16,13 +15,13 @@ const Index = (props) => (
 )
 
 Index.getInitialProps = async function() {
-  const res = await fetch('http://localhost:3000/api/allarticles')
+  const res = await fetch('http://10.129.90.92:3000/api/allusers')
   const data = await res.json()
 
   console.log(`Show data fetched. Count: ${data.length}`)
 
   return {
-    articles: data
+    users: data
   }
 }
 
