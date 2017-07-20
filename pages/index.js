@@ -7,7 +7,7 @@ const Index = (props) => (
     <h1>Articles</h1>
     <ul>
       {props.articles.map((article) => (
-        <li>
+        <li key={article.id}>
           <Link as={`/${article.url_slug}`} href={`/article?slug=${article.url_slug}`}><a>{article.title}</a></Link> - {article.abstract}
         </li>
       ))}
