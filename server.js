@@ -40,6 +40,14 @@ app.prepare()
     });
   });
 
+  // server.post('/api/createuser', urlencodedParser, function (req, res) {
+  //   req.body.first_name
+  //
+  //   db.allArticles().then(function(articles) {
+  //     res.json(articles);
+  //   });
+  // });
+
   server.use(express.static("static"));
 
   server.get('*', (req, res) => {
