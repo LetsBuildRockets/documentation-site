@@ -1,4 +1,4 @@
-import Layout from '../components/MyLayout.js'
+import Layout from '../components/mainLayout.js'
 import Link from 'next/link'
 import fetch from 'isomorphic-unfetch'
 
@@ -8,7 +8,7 @@ const User = (props) => (
     <ul>
       {props.users.map((user) => (
         <li key={user.id}>
-          <Link as={`/${user.url_slug}`} href={`/article?slug=${user.url_slug}`}><a>{user.first_name} {user.last_name}</a></Link>
+          <Link as={`/a/${user.url_slug}`} href={`/article?slug=${user.url_slug}`}><a>{user.first_name} {user.last_name}</a></Link>
         </li>
       ))}
     </ul>

@@ -1,4 +1,4 @@
-import Layout from '../components/MyLayout.js'
+import Layout from '../components/mainLayout.js'
 import Link from 'next/link'
 import fetch from 'isomorphic-unfetch'
 
@@ -8,7 +8,7 @@ const Index = (props) => (
     <ul>
       {props.articles.map((article) => (
         <li key={article.id}>
-          <Link as={`/${article.url_slug}`} href={`/article?slug=${article.url_slug}`}><a>{article.title}</a></Link> - {article.abstract}
+          <Link as={`/a/${article.url_slug}`} href={`/article?slug=${article.url_slug}`}><a>{article.title}</a></Link> - {article.abstract}
         </li>
       ))}
     </ul>

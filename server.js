@@ -10,7 +10,7 @@ app.prepare()
 .then(() => {
   const server = express()
 
-  server.get('/:slug', (req, res) => {
+  server.get('/a/:slug', (req, res) => {
     const actualPage = '/article'
     const queryParams = { slug: req.params.slug}
     app.render(req, res, actualPage, queryParams);

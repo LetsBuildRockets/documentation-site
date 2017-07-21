@@ -1,10 +1,10 @@
-import Layout from '../components/MyLayout.js'
+import Layout from '../components/mainLayout.js'
 import fetch from 'isomorphic-unfetch'
 
 const Article = (props) => (
     <Layout>
       <h1>{props.article.title}</h1>
-      <Link as={`/${author.url_slug}`} href={`/article?id=${author.id}`}>
+      <Link as={`/a/${author.url_slug}`} href={`/article?id=${author.id}`}>
         <h2>{props.author.first_name} {props.author.first_name}</h2>
       </Link>
 
