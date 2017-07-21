@@ -5,9 +5,9 @@ import fetch from 'isomorphic-unfetch'
 const Article = (props) => (
     <Layout>
       <h1>{props.article.title}</h1>
-      <Link as={`/a/${props.article.author_data.url_slug}`} href={`/article?slug=${props.article.author_data.url_slug}`}>
-        <a><h3>{props.article.author_data.first_name} {props.article.author_data.last_name}</h3></a>
-      </Link>
+      <h3>By: <Link as={`/a/${props.article.author_data.url_slug}`} href={`/article?slug=${props.article.author_data.url_slug}`}>
+        <a>{props.article.author_data.first_name} {props.article.author_data.last_name}</a>
+      </Link></h3>
       <p>{props.article.content}</p>
     </Layout>
 )
