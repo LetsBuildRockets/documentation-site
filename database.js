@@ -30,7 +30,7 @@ exports.allFiles = function() {
 }
 
 exports.allUsers = function() {
-  return knex('users').select('users.*', 'articles.url_slug').leftJoin('articles', 'users.article_id', 'articles.id');
+  return knex('users').select('users.username', 'users.first_name', 'users.last_name', 'users.article_id', 'users.profile_picture', 'articles.url_slug').leftJoin('articles', 'users.article_id', 'articles.id');
 }
 
 exports.getRelatedFiles = function(aid) {
@@ -55,7 +55,11 @@ exports.getFile = function(fid) {
 }
 
 exports.getUser = function(uid) {
-  return knex('users').where({'users.id': uid}).select('users.*', 'articles.url_slug').leftJoin('articles', 'users.article_id', 'articles.id');
+  return knex('users').where({'users.id': uid}).select('users.username', 'users.first_name', 'users.last_name', 'users.article_id', 'users.profile_picture', 'articles.url_slug').leftJoin('articles', 'users.article_id', 'articles.id');
+}
+
+exports.verifyUser = function(username, password) {
+  return username == username
 }
 
 
