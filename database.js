@@ -85,7 +85,7 @@ exports.createUser = function(username, first_name, last_name, article_id, profi
   });
 }
 
-exports.createArticle = function(title, date, author_id, content, needed_tags, tags, abtract, project_page, thumbnail, url_slug) {
+exports.createArticle = function(title, date, author_id, content, needed_tags, tags, abstract, project_page, thumbnail, url_slug) {
   // Using trx as a transaction object:
   knex.transaction(function(trx) {
     knex.insert({
@@ -95,7 +95,7 @@ exports.createArticle = function(title, date, author_id, content, needed_tags, t
       content: content,
       needed_tags: needed_tags,
       tags: tags,
-      abtract: abstract,
+      abstract: abstract,
       project_page: project_page,
       thumbnail: thumbnail,
       url_slug: url_slug
