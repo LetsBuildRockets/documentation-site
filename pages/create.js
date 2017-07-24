@@ -1,5 +1,6 @@
 import Layout from '../components/creatorLayout.js'
 import User from '../components/createUser.js'
+import Article from '../components/createArticle.js'
 
 export default class extends React.Component {
   render () {
@@ -14,6 +15,7 @@ export default class extends React.Component {
         </form>
         <hr></hr>
         <User />
+        <Article />
       </Layout>
     )
   }
