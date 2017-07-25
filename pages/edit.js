@@ -13,8 +13,9 @@ export default class extends React.Component {
             <option value="user">User</option>
           </select>
         </form>
-        <hr></hr>
+        <hr />
         <User />
+        <hr />
         <Article />
       </Layout>
     )
@@ -22,7 +23,7 @@ export default class extends React.Component {
   componentDidMount() {
     const script = document.createElement("script");
 
-    script.src = "/scripts/onchange.js";
+    script.src = "/scripts/editScript.js";
     script.async = true;
 
     document.body.appendChild(script);
