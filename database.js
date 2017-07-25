@@ -18,7 +18,7 @@ exports.knex = knex;
 // Functions to get info from the database:
 
 exports.allArticles = function() {
-  return knex('articles').select('title','url_slug','abstract');
+  return knex('articles').select('title','url_slug','abstract','id');
 }
 
 exports.allProjects = function() {
