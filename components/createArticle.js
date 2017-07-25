@@ -9,8 +9,8 @@ export default class extends React.Component {
           Abstract: <textarea name="abstract" rows="2" placeholder="Markdown Available"></textarea><br />
           Thumbnail: <input type="text" name="thumbnail" placeholder="(Link to a photo)"></input><br />
           Project Page? <input type="radio" name="article" value="Yes"></input>Yes <input type="radio" name="article" value="No"></input>No<br />
-          Tags: <div id="tags"></div><br />
-          Needed/Related Tags: <div id="needed_tags"></div><br />
+          Tags: <div id="tags" className="taggle_div"></div><br />
+          Needed/Related Tags: <div id="needed_tags" className="taggle_div"></div><br />
 
           <input type="submit" value="Submit"></input>
         </form>
@@ -24,9 +24,9 @@ export default class extends React.Component {
     const script4 = document.createElement("script");
     const style1 = document.createElement("link");
 
-    script1.src = "https://code.jquery.com/jquery-1.10.1.min.js";
+    script1.src = "https://code.jquery.com/jquery-1.10.2.js";
 
-    script2.src = "/scripts/jquery-ui-1.10.4.custom.min.js";
+    script2.src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js";
 
     script3.src = "/scripts/taggle.js";
 
@@ -37,6 +37,7 @@ export default class extends React.Component {
     style1.type = "text/css";
 
     document.body.appendChild(script1);
+    document.body.appendChild(script2);
     document.body.appendChild(script3);
     document.body.appendChild(script4);
     document.body.appendChild(style1);

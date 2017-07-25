@@ -276,9 +276,6 @@
         this.pasting = false;
         this.placeholder = null;
 
-        if (this.settings.placeholder) {
-            this.placeholder = document.createElement('span');
-        }
 
         if (typeof el === 'string') {
             this.container = document.getElementById(el);
@@ -703,7 +700,6 @@
         var li = document.createElement('li');
         var close = document.createElement('button');
         var hidden = document.createElement('input');
-        var span = document.createElement('span');
 
         text = this._formatTag(text);
 
@@ -712,8 +708,6 @@
         close.type = 'button';
         _on(close, 'click', this._remove.bind(this, close));
 
-        _setText(span, text);
-        span.className = 'taggle_text';
 
         li.className = 'taggle ' + this.settings.additionalTagClasses;
 
@@ -721,7 +715,6 @@
         hidden.value = text;
         hidden.name = this.settings.hiddenInputName;
 
-        li.appendChild(span);
         li.appendChild(close);
         li.appendChild(hidden);
 
