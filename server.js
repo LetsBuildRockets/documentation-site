@@ -1,10 +1,15 @@
 const express = require('express')
 const next = require('next')
 const db = require('./database');
+const gdrive = require('./gdrive.js');
 
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
+
+gdrive.getFile('0BwFaRrEmPx2yNk9QdFFCZ0hCbzQ', function(d) {
+  console.log(d);
+});
 
 app.prepare()
 .then(() => {
