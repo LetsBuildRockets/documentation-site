@@ -7,9 +7,13 @@ const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
 
-gdrive.getFile('0BwFaRrEmPx2yNk9QdFFCZ0hCbzQ', function(d) {
-  console.log(d);
-});
+// gdrive.getFile('0BwFaRrEmPx2yNk9QdFFCZ0hCbzQ', function(data) {
+//   console.log(data);
+// });
+//
+// gdrive.setFileTitle('0BwFaRrEmPx2yNk9QdFFCZ0hCbzQ', 'Parachute Calculations');
+//
+// gdrive.setFileDescription('0BwFaRrEmPx2yNk9QdFFCZ0hCbzQ', 'These are some cool calculations!');
 
 app.prepare()
 .then(() => {

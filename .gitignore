@@ -3,4 +3,4 @@
 package-lock.json
 .hushlogin
 .DS_Store
-gdrive.secret
+gdrive_secret.json

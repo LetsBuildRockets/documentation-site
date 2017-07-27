@@ -1,51 +1,68 @@
-const https = require('https');
-const gdriveAuthKey = fs.readFileSync('./gdrive.secret', 'utf8').trim();
+const google = require('googleapis');
+const key = require('./gdrive_secret.json');
+const drive = google.drive('v2');
+const jwtClient = new google.auth.JWT(
+  key.client_email,
+  null,
+  key.private_key,
+  ['https://www.googleapis.com/auth/drive',
+  'https://www.googleapis.com/auth/drive.appdata',
+  'https://www.googleapis.com/auth/drive.file',
+  'https://www.googleapis.com/auth/drive.metadata',
+  'https://www.googleapis.com/auth/drive.metadata.readonly',
+  'https://www.googleapis.com/auth/drive.photos.readonly',
+  'https://www.googleapis.com/auth/drive.readonly'], // an array of auth scopes
+  null
+);
 
+exports.getFile = function(fileID, callback) {
+  jwtClient.authorize(function (err, tokens) {
+    if (err) {
+      console.log(err);
+      return;
+    }
 
-exports.getFile = function(fid, callback) {
-  const options = {
-    hostname: 'www.googleapis.com',
-    port: 443,
-    path: '/drive/v2/files/' + fid + '?key=' + gdriveAuthKey,
-    method: 'GET',
-  };
-
-  const req = https.request(options, (res) => {
-    console.log('statusCode:', res.statusCode);
-    console.log('headers:', res.headers);
-
-    var jsonifiedData = "";
-
-    res.on('data', (d) => {
-      jsonifiedData += d.toString('utf8');
-    });
-
-    res.on('end', () => {
-      callback(JSON.parse(jsonifiedData));
+    drive.files.get({
+      auth: jwtClient,
+      fileId: fileID
+    }, function (err, resp) {
+      callback(resp);
     });
   });
-
-  req.on('error', (e) => {
-    console.error(e);
-  });
-  req.end();
 }
 
-exports.setFile = function(fid, title, description) {
-  const options = {
-    hostname: 'www.googleapis.com',
-    port: 443,
-    path: '/drive/v2/files/' + fid + '?key=' + gdriveAuthKey,
-    method: 'PATCH',
-  };
+exports.setFileTitle = function(fileID, newTitle) {
+  jwtClient.authorize(function (err, tokens) {
+    if (err) {
+      console.log(err);
+      return;
+    }
 
-  const req = https.request(options, (res) => {
-
-    res.on('data', callback);
+    drive.files.patch({
+      auth: jwtClient,
+      fileId: fileID,
+      resource: {title: newTitle}
+    }, function (err, resp) {
+      console.log("Error:", err);
+      console.log(resp);
+    });
   });
+}
 
-  req.on('error', (e) => {
-    console.error(e);
+exports.setFileDescription = function(fileID, newDescription) {
+  jwtClient.authorize(function (err, tokens) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+
+    drive.files.patch({
+      auth: jwtClient,
+      fileId: fileID,
+      resource: {description: newDescription}
+    }, function (err, resp) {
+      console.log("Error:", err);
+      console.log(resp);
+    });
   });
-  req.end();
 }

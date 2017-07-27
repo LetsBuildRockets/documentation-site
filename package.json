@@ -12,12 +12,12 @@
     "express": "^4.15.3",
     "google-auth-library": "^0.10.0",
     "googleapis": "^20.1.0",
-    "https": "^1.0.0",
     "isomorphic-unfetch": "^2.0.0",
     "knex": "^0.13.0",
-    "next": "^2.4.7",
+    "next": "^2.4.8",
     "pg": "^6.4.1",
     "react": "^15.6.1",
-    "react-dom": "^15.6.1"
+    "react-dom": "^15.6.1",
+    "request": "^2.81.0"
   }
 }
