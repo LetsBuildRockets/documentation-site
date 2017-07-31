@@ -8,7 +8,7 @@ export default class extends React.Component {
           Content: <textarea name="content" rows="10" placeholder="Markdown Available"></textarea><br />
           Abstract: <textarea name="abstract" rows="2" placeholder="Markdown Available"></textarea><br />
           Thumbnail: <input type="text" name="thumbnail" placeholder="(Link to a photo)"></input><br />
-          Project Page? <input type="radio" name="article" value="Yes"></input>Yes <input type="radio" name="article" value="No"></input>No<br />
+          Type: <select id="selection" name="type"><option value="article">Article</option><option value="project">Project</option><option value="user">User</option></select><br />
           Tags: <div id="tags" className="taggle_div"></div><br />
           Needed/Related Tags: <div id="needed_tags" className="taggle_div"></div><br />
 
@@ -18,6 +18,6 @@ export default class extends React.Component {
     )
   }
   componentDidMount() {
-    
+
   }
 }
