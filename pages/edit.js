@@ -17,6 +17,7 @@ export default class extends React.Component {
     const script3 = document.createElement("script");
     const script4 = document.createElement("script");
     const style1 = document.createElement("link");
+    const style2 = document.createElement("link");
 
     script1.src = "https://code.jquery.com/jquery-1.10.2.min.js";
 
@@ -32,10 +33,15 @@ export default class extends React.Component {
     style1.rel = "stylesheet";
     style1.type = "text/css";
 
+    style2.href = "styles/forms.css";
+    style2.rel = "stylesheet";
+    style2.type = "text/css";
+
     document.body.appendChild(script1);
     document.body.appendChild(script2);
     document.body.appendChild(script3);
     document.body.appendChild(script4);
     document.body.appendChild(style1);
+    document.body.appendChild(style2);
   }
 }

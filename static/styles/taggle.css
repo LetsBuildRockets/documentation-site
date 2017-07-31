@@ -10,18 +10,20 @@
 .taggle_list {
   float: left;
   width: 100%;
-  margin-left: -5px;
+  margin-left: -5px; margin-top: 5px;
   padding-left: 5px; padding-right: 5px;
   list-style-type: none;
   border-style: solid;
   border-width: 1px;
+  border-color: #878787;
 }
 
 .taggle_input {
   border: none;
   outline: none;
   font-size: 16px;
-  font-weight: 300; }
+  font-weight: 300;
+  font-family: inherit; }
 
 .taggle_list li {
   float: left;
@@ -48,10 +50,10 @@
   background: #cac8c4; }
 
 .taggle_list .taggle .close {
-  font-size: 1.1rem;
+  font-size: 1rem;
   position: absolute;
   top: 5px;
-  right: 3px;
+  right: -3px;
   text-decoration: none;
   padding-top: 3px;
   line-height: 0.5;
