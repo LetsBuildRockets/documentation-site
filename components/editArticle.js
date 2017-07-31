@@ -1,4 +1,4 @@
-const editArticle = () => ()
+const editArticle = () => (
   <div>
     <form id="article">
       Title: <input type="text" name="title" placeholder="Untitled"></input><br />
