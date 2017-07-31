@@ -8,7 +8,7 @@ document.getElementById('selection').onchange = function() {
   document.getElementById(selection).removeAttribute('hidden');
 };
 
-var tags = new Taggle("tags");
-var needed_tags = new Taggle("needed_tags");
+var article_tags = new Taggle("article_tags");
+var article_needed_tags = new Taggle("article_needed_tags");
 
-document.getElementById('addAuthor').onclick = function() {alert('Pretend this adds another field for an author.')};
+document.getElementById('addAuthor').onclick = function() {alert('This\'ll eventually end up being another instance of Taggle.')};
