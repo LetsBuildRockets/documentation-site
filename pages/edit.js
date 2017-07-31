@@ -1,4 +1,4 @@
-import Layout from '../components/creatorLayout.js'
+import Layout from '../components/editorLayout.js'
 import User from '../components/createUser.js'
 import Article from '../components/createArticle.js'
 
