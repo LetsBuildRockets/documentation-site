@@ -50,7 +50,7 @@
          * Allow duplicate tags to be entered in the field?
          * @type {Boolean}
          */
-        allowDuplicates: false,
+        allowDuplicates: true,
 
         /**
          * Allow the saving of a tag on blur, rather than it being
@@ -539,7 +539,7 @@
         var dupes;
 
         if (this.settings.duplicateTagClass) {
-            dupes = tagglelist.querySelectorAll('.' + this.settings.duplicateTagClass);
+            dupes = tagglelist.getElementsByClassName(this.settings.duplicateTagClass);
             for (var i = 0, len = dupes.length; i < len; i++) {
                 dupes[i].classList.remove(this.settings.duplicateTagClass);
             }
@@ -700,6 +700,7 @@
         var li = document.createElement('li');
         var close = document.createElement('button');
         var hidden = document.createElement('input');
+        var span = document.createElement('span');
 
         text = this._formatTag(text);
 
@@ -708,6 +709,9 @@
         close.type = 'button';
         _on(close, 'click', this._remove.bind(this, close));
 
+        _setText(span, text);
+        span.className = 'taggle_text';
+
 
         li.className = 'taggle ' + this.settings.additionalTagClasses;
 
@@ -715,6 +719,7 @@
         hidden.value = text;
         hidden.name = this.settings.hiddenInputName;
 
+        li.appendChild(span);
         li.appendChild(close);
         li.appendChild(hidden);
 

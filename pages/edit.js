@@ -6,26 +6,36 @@ export default class extends React.Component {
   render () {
     return (
       <Layout>
-        <form>
-          <select id="selection" name="editors">
-            <option value="article">Article</option>
-            <option value="file">File</option>
-            <option value="user">User</option>
-          </select>
-        </form>
-        <hr />
         <User />
-        <hr />
         <Article />
       </Layout>
     )
   }
   componentDidMount() {
-    const script = document.createElement("script");
+    const script1 = document.createElement("script");
+    const script2 = document.createElement("script");
+    const script3 = document.createElement("script");
+    const script4 = document.createElement("script");
+    const style1 = document.createElement("link");
 
-    script.src = "/scripts/editScript.js";
-    script.async = true;
+    script1.src = "https://code.jquery.com/jquery-1.10.2.min.js";
 
-    document.body.appendChild(script);
+    script2.src = "https://code.jquery.com/ui/1.10.4/jquery-ui.min.js";
+    script2.defer = true;
+
+    script3.src = "/scripts/taggle.js";
+
+    script4.src = "/scripts/editScript.js";
+    script4.defer = true;
+
+    style1.href = "styles/taggle.css";
+    style1.rel = "stylesheet";
+    style1.type = "text/css";
+
+    document.body.appendChild(script1);
+    document.body.appendChild(script2);
+    document.body.appendChild(script3);
+    document.body.appendChild(script4);
+    document.body.appendChild(style1);
   }
 }
