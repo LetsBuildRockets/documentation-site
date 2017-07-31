@@ -1,6 +1,6 @@
 import Layout from '../components/editorLayout.js'
-import User from '../components/createUser.js'
-import Article from '../components/createArticle.js'
+import User from '../components/editUser.js'
+import Article from '../components/editArticle.js'
 
 export default class extends React.Component {
   render () {
