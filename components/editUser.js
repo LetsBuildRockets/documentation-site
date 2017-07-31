@@ -1,4 +1,4 @@
-const createUser = () => (
+const editUser = () => (
   <div>
     <form id="user" hidden>
       First name: <input type="text" name="first_name" placeholder="Jack"></input><br />
@@ -11,4 +11,4 @@ const createUser = () => (
   </div>
 )
 
-export default createUser
+export default editUser
