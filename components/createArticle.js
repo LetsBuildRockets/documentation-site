@@ -4,7 +4,7 @@ export default class extends React.Component {
       <div>
         <form id="article">
           Title: <input type="text" name="title" placeholder="Untitled"></input><br />
-          Author: <input type="text" name="author" placeholder="You"></input> <button id="addAuthor" type="button">Add Author</button><br />
+          Author: <input type="text" name="author" placeholder="You"></input><br />
           Content: <textarea name="content" rows="10" placeholder="Markdown Available"></textarea><br />
           Abstract: <textarea name="abstract" rows="2" placeholder="Markdown Available"></textarea><br />
           Thumbnail: <input type="text" name="thumbnail" placeholder="(Link to a photo)"></input><br />
