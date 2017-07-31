@@ -4,9 +4,11 @@ document.getElementById('selection').onchange = function() {
 
   document.getElementById('user').setAttribute('hidden', '');
   document.getElementById('article').setAttribute('hidden', '');
+  document.getElementById('file').setAttribute('hidden', '');
 
   document.getElementById(selection).removeAttribute('hidden');
 };
 
 var article_tags = new Taggle("article_tags");
 var article_needed_tags = new Taggle("article_needed_tags");
+var file_tags = new Taggle("file_tags");

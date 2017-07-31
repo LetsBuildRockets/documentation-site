@@ -1,6 +1,7 @@
 import Layout from '../components/editorLayout.js'
 import User from '../components/editUser.js'
 import Article from '../components/editArticle.js'
+import File from '../components/editFile.js'
 
 export default class extends React.Component {
   render () {
@@ -8,6 +9,7 @@ export default class extends React.Component {
       <Layout>
         <User />
         <Article />
+        <File />
       </Layout>
     )
   }
