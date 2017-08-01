@@ -8,7 +8,7 @@ var q = async.queue(function(data, callback) {
 }, 1);
 q.drain = function() {
   console.log('That\'s all folks!')
-  console.log(folders); //We would then run a file labeling function that hasn't been written yet.
+  console.log(folders); //We would then run a function that hasn't been written yet.
 }
 
 exports.makeTree = function() {
