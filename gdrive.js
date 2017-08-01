@@ -15,6 +15,26 @@ const jwtClient = new google.auth.JWT(
   null
 );
 
+exports.getFolders = function(folderID, callback) {
+  jwtClient.authorize(function (err, tokens) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+
+    drive.files.list({
+      auth: jwtClient,
+      maxResults: 99999,
+      q: '\'' + folderID + '\' in parents and mimeType = \'application/vnd.google-apps.folder\'',
+      orderBy: 'title',
+      fields: 'items(id,title)'
+    }, function (err, resp) {
+      //TODO: Make it retry if there's an error.
+      callback(resp);
+    });
+  });
+}
+
 exports.getFile = function(fileID, callback) {
   jwtClient.authorize(function (err, tokens) {
     if (err) {

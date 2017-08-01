@@ -2,6 +2,7 @@ const express = require('express')
 const next = require('next')
 const db = require('./database');
 const gdrive = require('./gdrive.js');
+const dbSync = require('./dbSync.js');
 
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
@@ -14,6 +15,8 @@ const handle = app.getRequestHandler()
 // gdrive.setFileTitle('0BwFaRrEmPx2yNk9QdFFCZ0hCbzQ', 'Parachute Calculations');
 //
 // gdrive.setFileDescription('0BwFaRrEmPx2yNk9QdFFCZ0hCbzQ', 'These are some cool calculations!');
+//
+// dbSync.makeTree();
 
 app.prepare()
 .then(() => {
