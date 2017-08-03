@@ -81,6 +81,7 @@ exports.setFileTitle = function(fileID, newTitle) {
     drive.files.patch({
       auth: jwtClient,
       fileId: fileID,
+      setModifiedDate: true,
       resource: {title: newTitle}
     }, function (err, resp) {
       console.log("Error:", err);
@@ -99,6 +100,7 @@ exports.setFileDescription = function(fileID, newDescription) {
     drive.files.patch({
       auth: jwtClient,
       fileId: fileID,
+      setModifiedDate: true,
       resource: {description: newDescription}
     }, function (err, resp) {
       console.log("Error:", err);

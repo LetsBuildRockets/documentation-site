@@ -3,8 +3,8 @@ const async = require('async');
 
 var folders = {};
 
-var q = async.queue(function(data, callback) {
-  gdrive.getFolders(data, callback);
+var q = async.queue(function(folderID, callback) {
+  gdrive.getFolders(folderID, callback);
 }, 1);
 q.drain = function() {
   console.log('That\'s all folks!')
@@ -17,17 +17,17 @@ exports.makeTree = function() {
   });
 }
 
-function iterate(data, titleList, folderID) {
+function iterate(data, folderList, folderID) {
   if (folderID != "") {
-    folders[folderID] = titleList;
-    console.log(folderID + ': ' + titleList);
+    folders[folderID] = folderList;
+    console.log(folderID + ': ' + folderList);
   }
   if (data != null) {
     data.items.forEach(function(folder) {
       q.push(folder.id, function(newData) {
-        var newTitleList = titleList.slice();
-        newTitleList.push(folder.title);
-        iterate(newData, newTitleList, folder.id);
+        var newFolderList = folderList.slice();
+        newFolderList.push(folder.title);
+        iterate(newData, newFolderList, folder.id);
       });
     });
   }
