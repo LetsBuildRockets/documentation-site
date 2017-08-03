@@ -3,8 +3,9 @@ const async = require('async');
 
 var folders = {};
 
-var q = async.queue(function(folderID, callback) {
-  gdrive.getFolders(folderID, callback);
+var q = async.queue(function(folderID, folderCallback, fileCallback) {
+  gdrive.getFolders(folderID, folderCallback);
+  gdrive.getFiles(folderID, fileCallback);
 }, 1);
 q.drain = function() {
   console.log('That\'s all folks!')
@@ -28,7 +29,13 @@ function iterate(data, folderList, folderID) {
         var newFolderList = folderList.slice();
         newFolderList.push(folder.title);
         iterate(newData, newFolderList, folder.id);
-      });
+      }, addFiles(fileData));
     });
   }
+}
+
+function addFiles(data) {
+  data.items.forEach(function(file) {
+    // Put code for interfacing with database here.
+  })
 }

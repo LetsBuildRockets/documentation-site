@@ -16,7 +16,10 @@ const handle = app.getRequestHandler()
 //
 // gdrive.setFileDescription('0BwFaRrEmPx2yNk9QdFFCZ0hCbzQ', 'These are some cool calculations!');
 //
-// dbSync.makeTree();
+// gdrive.getFiles('0BwFaRrEmPx2yNjZFYzQ5X2t6X0k', function(data) {
+//   console.log(data.items);
+//   console.log(data.items.length);
+// })
 
 app.prepare()
 .then(() => {
