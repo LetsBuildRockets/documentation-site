@@ -21,6 +21,10 @@ const handle = app.getRequestHandler()
 //   console.log(data.items.length);
 // })
 
+db.fileExists('asdfasdfsdglkadjfh', function(exists) {
+  console.log(exists);
+})
+
 app.prepare()
 .then(() => {
   const server = express()

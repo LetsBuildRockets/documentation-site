@@ -50,12 +50,33 @@ exports.getArticleByID = function(aid) {
   return knex('articles').where({id: aid}).select('*');
 }
 
+exports.articleExists = function articleExists(slug, callback) {
+  knex('articles').where({url_slug: slug}).select('*').then(function(article) {
+    var exists = (article.length > 0);
+    callback(exists);
+  });
+}
+
 exports.getFile = function(fid) {
   return knex('files').where({id: fid}).select('*');
 }
 
+exports.fileExists = function fileExists(slug, callback) {
+  knex('files').where({url_slug: slug}).select('*').then(function(file) {
+    var exists = (file.length > 0);
+    callback(exists);
+  });
+}
+
 exports.getUser = function(uid) {
   return knex('users').where({'users.id': uid}).select('users.username', 'users.first_name', 'users.last_name', 'users.article_id', 'users.profile_picture', 'articles.url_slug').leftJoin('articles', 'users.article_id', 'articles.id');
+}
+
+exports.userExists = function userExists(username, callback) {
+  knex('users').where({username: username}).select('*').then(function(user) {
+    var exists = (user.length > 0);
+    callback(exists);
+  });
 }
 
 exports.verifyUser = function(username, password) {
@@ -65,70 +86,93 @@ exports.verifyUser = function(username, password) {
 
 // Functions to edit info in the database:
 
-exports.createUser = function(username, first_name, last_name, article_id, profile_picture) {
-  // Using trx as a transaction object:
-  knex.transaction(function(trx) {
-    knex.insert({
-      username: username,
-      first_name: first_name,
-      last_name: last_name,
-      article_id: article_id,
-      profile_picture: profile_picture
-    })
-      .into('users')
-      .transacting(trx)
-      .then(trx.commit)
-      .catch(trx.rollback);
-  })
-  .catch(function(error) {
-    console.error(error);
+exports.editUser = function(data) {
+  userExists(data.username, function(exists) {
+    if (exists) {
+      // Using trx as a transaction object:
+      knex.transaction(function(trx) {
+        knex('users')
+          .update({data})
+          .transacting(trx)
+          .then(trx.commit)
+          .catch(trx.rollback);
+      })
+      .catch(function(error) {
+        console.error(error);
+      });
+    } else {
+      // Using trx as a transaction object:
+      knex.transaction(function(trx) {
+        knex.insert({data})
+          .into('users')
+          .transacting(trx)
+          .then(trx.commit)
+          .catch(trx.rollback);
+      })
+      .catch(function(error) {
+        console.error(error);
+      });
+    }
   });
 }
 
-exports.createArticle = function(title, date, author_id, content, needed_tags, tags, abstract, project_page, thumbnail, url_slug) {
-  // Using trx as a transaction object:
-  knex.transaction(function(trx) {
-    knex.insert({
-      title: title,
-      date: date,
-      author_id: author_id,
-      content: content,
-      needed_tags: needed_tags,
-      tags: tags,
-      abstract: abstract,
-      project_page: project_page,
-      thumbnail: thumbnail,
-      url_slug: url_slug
-    })
-      .into('articles')
-      .transacting(trx)
-      .then(trx.commit)
-      .catch(trx.rollback);
-  })
-  .catch(function(error) {
-    console.error(error);
+exports.editArticle = function(data) {
+  articleExists(data.url_slug, function(exists) {
+    if (exists) {
+      // Using trx as a transaction object:
+      knex.transaction(function(trx) {
+        knex('articles')
+          .update({data})
+          .transacting(trx)
+          .then(trx.commit)
+          .catch(trx.rollback);
+      })
+      .catch(function(error) {
+        console.error(error);
+      });
+    } else {
+      // Using trx as a transaction object:
+      knex.transaction(function(trx) {
+        knex.insert({data})
+          .into('articles')
+          .transacting(trx)
+          .then(trx.commit)
+          .catch(trx.rollback);
+      })
+      .catch(function(error) {
+        console.error(error);
+      });
+    }
   });
 }
 
-exports.addFile = function(name, file_type, date_modified, date_created, tags, description, thumbnail_data, url_slug) {
-  // Using trx as a transaction object:
-  knex.transaction(function(trx) {
-    knex.insert({
-      name: name,
-      file_type: file_type,
-      date_modified: date_modified,
-      date_created: date_created,
-      tags: tags,
-      description: description,
-      thumbnail_data: thumbnail_data,
-      url_slug: url_slug
-    })
-      .into('articles')
-      .transacting(trx)
-      .then(trx.commit)
-      .catch(trx.rollback);
-  })
-  .catch(function(error) {
-    console.error(error);
+exports.editFile = function(data) {
+  fileExists(data.url_slug, function(exists) {
+    if (exists) {
+      // Using trx as a transaction object:
+      knex.transaction(function(trx) {
+        knex('files')
+          .where({slug: slug})
+          .update({data})
+          .transacting(trx)
+          .then(trx.commit)
+          .catch(trx.rollback);
+      })
+      .catch(function(error) {
+        console.error(error);
+      });
+    } else {
+      // Using trx as a transaction object:
+      knex.transaction(function(trx) {
+        knex.insert({data})
+          .into('files')
+          .transacting(trx)
+          .then(trx.commit)
+          .catch(trx.rollback);
+      })
+      .catch(function(error) {
+        console.error(error);
+      });
+    }
   });
 }
