@@ -2,26 +2,28 @@ const gdrive = require('./gdrive.js');
 const db = require('./database');
 const async = require('async');
 
+const rootFolder = '0B_RM9WoF1XjFMjcwTFhYSHp4c28';
+
 var folders = {};
 
-var driveQ = async.queue(function(folderID, folderCallback, fileCallback) {
+var folderQ = async.queue(function(folderID, folderCallback) {
   gdrive.getFolders(folderID, folderCallback);
+}, 1);
+folderQ.drain = function() {
+  console.log('The folders are done!');
+  syncFiles();
+}
+
+var fileQ = async.queue(function(folderID, fileCallback) {
   gdrive.getFiles(folderID, fileCallback);
 }, 1);
-driveQ.drain = function() {
-  console.log('That\'s all folks!')
-  console.log(folders);
+fileQ.drain = function() {
+  console.log('The files are done!');
 }
 
-var dbQ = async.queue(function(fileStuff) {
-  db.editFile(fileStuff);
-}, 1);
-dbQ.drain = function() {
-  console.log('That\'s all folks!')
-}
-
-exports.makeTree = function() {
-  gdrive.getFolders('0B_RM9WoF1XjFMjcwTFhYSHp4c28', function(folderResponse){
+exports.update = function() {
+  folders[rootFolder] = [];
+  gdrive.getFolders(rootFolder, function(folderResponse){
     iterate(folderResponse, [], '');
   });
 }
@@ -33,21 +35,35 @@ function iterate(folderResponse, folderList, folderID) {
   }
   if (folderResponse != null) {
     folderResponse.items.forEach(function(folder) {
-      driveQ.push(folder.id, function(newData) {
+      folderQ.push(folder.id, function(newData) {
         var newFolderList = folderList.slice();
         newFolderList.push(folder.title);
         iterate(newData, newFolderList, folder.id);
-      }, addFiles(fileResponse));
+      });
     });
+  }
+}
+
+function syncFiles() {
+  for (var key in folders) {
+    fileQ.push(key, addFiles);
   }
 }
 
 function addFiles(fileResponse) {
   if (fileResponse != null) {
     fileResponse.items.forEach(function(file) {
+      var parent_titles = [];
+      file.parents.forEach(function(parent) {
+        folders[parent.id].forEach(function(parentID) {
+          parent_titles.push(parentID);
+        });
+      });
+
+      var modified = (new Date(Date.parse(file.modifiedDate))).toISOString();
+      var created = (new Date(Date.parse(file.createdDate))).toISOString();
       //var modified = Date.format(file.modifiedDate); // Not how it would actually be done
-      //var parents = folders.id; // Will the folders tree be done with everything above the file we get to?
-      dbQ.push({name: file.title, description: file.description, date_modified: modified, date_created: created, tags: parents, url_slug: file.id, mimetype: file.mimeType, extension: file.fullFileExtension})
+      db.editFile({name: file.title, description: file.description, date_modified: modified, date_created: created, url_slug: file.id, mimetype: file.mimeType, extension: file.fullFileExtension, parent_titles: JSON.stringify(parent_titles)});
     });
   }
 }

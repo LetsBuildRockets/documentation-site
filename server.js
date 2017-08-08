@@ -20,10 +20,8 @@ const handle = app.getRequestHandler()
 //   console.log(data.items);
 //   console.log(data.items.length);
 // })
-
-db.fileExists('asdfasdfsdglkadjfh', function(exists) {
-  console.log(exists);
-})
+// 
+// dbSync.update();
 
 app.prepare()
 .then(() => {

@@ -50,7 +50,7 @@ exports.getArticleByID = function(aid) {
   return knex('articles').where({id: aid}).select('*');
 }
 
-exports.articleExists = function articleExists(slug, callback) {
+function articleExists(slug, callback) {
   knex('articles').where({url_slug: slug}).select('*').then(function(article) {
     var exists = (article.length > 0);
     callback(exists);
@@ -61,7 +61,7 @@ exports.getFile = function(fid) {
   return knex('files').where({id: fid}).select('*');
 }
 
-exports.fileExists = function fileExists(slug, callback) {
+function fileExists(slug, callback) {
   knex('files').where({url_slug: slug}).select('*').then(function(file) {
     var exists = (file.length > 0);
     callback(exists);
@@ -72,7 +72,7 @@ exports.getUser = function(uid) {
   return knex('users').where({'users.id': uid}).select('users.username', 'users.first_name', 'users.last_name', 'users.article_id', 'users.profile_picture', 'articles.url_slug').leftJoin('articles', 'users.article_id', 'articles.id');
 }
 
-exports.userExists = function userExists(username, callback) {
+function userExists(username, callback) {
   knex('users').where({username: username}).select('*').then(function(user) {
     var exists = (user.length > 0);
     callback(exists);
@@ -92,7 +92,7 @@ exports.editUser = function(data) {
       // Using trx as a transaction object:
       knex.transaction(function(trx) {
         knex('users')
-          .update({data})
+          .update(data)
           .transacting(trx)
           .then(trx.commit)
           .catch(trx.rollback);
@@ -103,7 +103,7 @@ exports.editUser = function(data) {
     } else {
       // Using trx as a transaction object:
       knex.transaction(function(trx) {
-        knex.insert({data})
+        knex.insert(data)
           .into('users')
           .transacting(trx)
           .then(trx.commit)
@@ -122,7 +122,7 @@ exports.editArticle = function(data) {
       // Using trx as a transaction object:
       knex.transaction(function(trx) {
         knex('articles')
-          .update({data})
+          .update(data)
           .transacting(trx)
           .then(trx.commit)
           .catch(trx.rollback);
@@ -133,7 +133,7 @@ exports.editArticle = function(data) {
     } else {
       // Using trx as a transaction object:
       knex.transaction(function(trx) {
-        knex.insert({data})
+        knex.insert(data)
           .into('articles')
           .transacting(trx)
           .then(trx.commit)
@@ -152,8 +152,8 @@ exports.editFile = function(data) {
       // Using trx as a transaction object:
       knex.transaction(function(trx) {
         knex('files')
-          .where({slug: slug})
-          .update({data})
+          .where({url_slug: data.url_slug})
+          .update(data)
           .transacting(trx)
           .then(trx.commit)
           .catch(trx.rollback);
@@ -164,7 +164,7 @@ exports.editFile = function(data) {
     } else {
       // Using trx as a transaction object:
       knex.transaction(function(trx) {
-        knex.insert({data})
+        knex.insert(data)
           .into('files')
           .transacting(trx)
           .then(trx.commit)
