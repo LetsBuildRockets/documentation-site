@@ -33,7 +33,7 @@ exports.allUsers = function() {
   return knex('users').select('users.username', 'users.first_name', 'users.last_name', 'users.article_id', 'users.profile_picture', 'articles.url_slug').leftJoin('articles', 'users.article_id', 'articles.id');
 }
 
-exports.getRelatedFiles = function(aid) {
+exports.getRelatedFiles = function(aid) { //TODO: Make this work
   var needed_tags = knex('articles').where({id: aid}).select('needed_tags');
   return knex('files').whereIn(tags, needed_tags[0]).select('id', 'name', 'file_type', 'url_slug');
 }

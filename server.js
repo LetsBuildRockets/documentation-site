@@ -57,6 +57,12 @@ app.prepare()
     });
   });
 
+  server.get('/api/files', function (req, res) {
+    db.allFiles().then(function(files) {
+      res.json(files);
+    });
+  });
+
   // server.post('/api/createuser', urlencodedParser, function (req, res) {
   //   req.body.first_name
   //

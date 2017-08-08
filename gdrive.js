@@ -29,6 +29,8 @@ exports.getFolders = function(folderID, callback) {
       orderBy: 'title',
       fields: 'items(id,title)'
     }, function (err, resp) {
+      if (err != null)
+        console.log("Error:", err);
       //TODO: Make it retry if there's an error.
       callback(resp);
     });
@@ -49,6 +51,8 @@ exports.getFiles = function(folderID, callback) {
       orderBy: 'title',
       fields: 'items(id,parents/id,title,description,fullFileExtension,createdDate,modifiedDate,mimeType)'
     }, function (err, resp) {
+      if (err != null)
+        console.log("Error:", err);
       //TODO: Make it retry if there's an error.
       callback(resp);
     });
@@ -66,6 +70,8 @@ exports.getFile = function(fileID, callback) {
       auth: jwtClient,
       fileId: fileID
     }, function (err, resp) {
+      if (err != null)
+        console.log("Error:", err);
       callback(resp);
     });
   });
@@ -84,7 +90,8 @@ exports.setFileTitle = function(fileID, newTitle) {
       setModifiedDate: true,
       resource: {title: newTitle}
     }, function (err, resp) {
-      console.log("Error:", err);
+      if (err != null)
+        console.log("Error:", err);
       console.log(resp);
     });
   });
@@ -103,7 +110,8 @@ exports.setFileDescription = function(fileID, newDescription) {
       setModifiedDate: true,
       resource: {description: newDescription}
     }, function (err, resp) {
-      console.log("Error:", err);
+      if (err != null)
+        console.log("Error:", err);
       console.log(resp);
     });
   });
