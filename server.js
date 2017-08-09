@@ -1,5 +1,6 @@
-const express = require('express')
-const next = require('next')
+const express = require('express');
+const next = require('next');
+const schedule = require('node-schedule');
 const db = require('./database');
 const gdrive = require('./gdrive.js');
 
@@ -20,7 +21,9 @@ const handle = app.getRequestHandler()
 //   console.log(data.items.length);
 // })
 
-setInterval(autoUpdate, 60000);
+var rule = new schedule.RecurrenceRule();
+rule.hour = 0;
+schedule.scheduleJob({hour: 0}, autoUpdate);
 
 function autoUpdate() {
   const dbSync = require('./dbSync.js');
