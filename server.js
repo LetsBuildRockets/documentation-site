@@ -2,7 +2,6 @@ const express = require('express')
 const next = require('next')
 const db = require('./database');
 const gdrive = require('./gdrive.js');
-const dbSync = require('./dbSync.js');
 
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
@@ -20,8 +19,13 @@ const handle = app.getRequestHandler()
 //   console.log(data.items);
 //   console.log(data.items.length);
 // })
-// 
-// dbSync.update();
+
+setInterval(autoUpdate, 60000);
+
+function autoUpdate() {
+  const dbSync = require('./dbSync.js');
+  dbSync.update();
+}
 
 app.prepare()
 .then(() => {
