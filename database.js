@@ -22,7 +22,7 @@ exports.allArticles = function() {
 }
 
 exports.allProjects = function() {
-  return knex('articles').where({type: project}).select('title','url_slug','abstract');
+  return knex('articles').where({type: 'project'}).select('title','url_slug','abstract');
 }
 
 exports.allFiles = function() {
@@ -79,10 +79,6 @@ function userExists(username, callback) {
   });
 }
 
-exports.verifyUser = function(username, password) {
-  return username == username
-}
-
 
 // Functions to edit info in the database:
 
@@ -103,8 +99,8 @@ exports.editUser = function(data) {
     } else {
       // Using trx as a transaction object:
       knex.transaction(function(trx) {
-        knex.insert(data)
-          .into('users')
+        knex('users')
+          .insert(data)
           .transacting(trx)
           .then(trx.commit)
           .catch(trx.rollback);
@@ -133,8 +129,8 @@ exports.editArticle = function(data) {
     } else {
       // Using trx as a transaction object:
       knex.transaction(function(trx) {
-        knex.insert(data)
-          .into('articles')
+        knex('articles')
+          .insert(data)
           .transacting(trx)
           .then(trx.commit)
           .catch(trx.rollback);
@@ -164,8 +160,8 @@ exports.editFile = function(data) {
     } else {
       // Using trx as a transaction object:
       knex.transaction(function(trx) {
-        knex.insert(data)
-          .into('files')
+        knex('files')
+          .insert(data)
           .transacting(trx)
           .then(trx.commit)
           .catch(trx.rollback);
