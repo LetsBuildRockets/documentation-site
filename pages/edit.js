@@ -35,7 +35,7 @@ export default class extends React.Component {
     style1.rel = "stylesheet";
     style1.type = "text/css";
 
-    style2.href = "styles/forms.css";
+    style2.href = "styles/editor.css";
     style2.rel = "stylesheet";
     style2.type = "text/css";
 
