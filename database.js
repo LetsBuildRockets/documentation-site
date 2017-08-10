@@ -1,5 +1,13 @@
 var pg = require('pg');
 var Promise = require('bluebird');
+const bcrypt = require('bcrypt');
+
+bcrypt.genSalt(10, function(err, salt) {
+    bcrypt.hash("hello", salt, function(err, hash) {
+        console.log(salt);
+        console.log(hash);
+    });
+});
 
 var knex = require('knex')({
   client: 'pg',
