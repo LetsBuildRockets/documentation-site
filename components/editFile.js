@@ -7,7 +7,8 @@ const editFile = () => (
       Thumbnail: <input type="text" name="thumbnail" placeholder="(Link to a photo)"></input><br />
       Description: <textarea name="description" rows="2" placeholder="Markdown Available"></textarea><br />
       Tags: <div id="file_tags" className="taggle_div"></div><br />
-      <input type="submit" value="Submit"></input>
+
+      <input type="button" value="Submit"></input>
     </form>
   </div>
 )
