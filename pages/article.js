@@ -16,7 +16,7 @@ Article.getInitialProps = async function (context) {
   const { slug } = context.query
   const res = await fetch(`http://localhost:3000/api/articles/${slug}`)
   const article = (await res.json())[0]
-  const res2 = await fetch(`http://localhost:3000/api/users/${article.author_id}`)
+  const res2 = await fetch(`http://localhost:3000/api/users/id/${article.author_id}`)
   article.author_data = (await res2.json())[0]
 
   console.log(`Fetched article: ${article.title}`)
