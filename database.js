@@ -56,6 +56,7 @@ function articleExists(slug, callback) {
     callback(exists);
   });
 }
+exports.articleExists = articleExists;
 
 exports.getFile = function(fid) {
   return knex('files').where({id: fid}).select('*');
@@ -67,9 +68,14 @@ function fileExists(slug, callback) {
     callback(exists);
   });
 }
+exports.fileExists = fileExists;
 
 exports.getUser = function(uid) {
   return knex('users').where({'users.id': uid}).select('users.username', 'users.first_name', 'users.last_name', 'users.article_id', 'users.profile_picture', 'articles.url_slug').leftJoin('articles', 'users.article_id', 'articles.id');
+}
+
+exports.getUserIDByUsername = function(username) {
+  return knex('users').where({username: username}).select('id');
 }
 
 function userExists(username, callback) {
@@ -78,6 +84,7 @@ function userExists(username, callback) {
     callback(exists);
   });
 }
+exports.userExists = userExists;
 
 
 // Functions to edit info in the database:

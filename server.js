@@ -58,9 +58,15 @@ app.prepare()
     });
   });
 
-  server.get('/api/users/:id', function (req, res) {
+  server.get('/api/users/id/:id', function (req, res) {
     db.getUser(req.params.id).then(function(user) {
       res.json(user);
+    });
+  });
+
+  server.get('/api/users/username/:username', function (req, res) {
+    db.getUserIDByUsername(req.params.username).then(function(userID) {
+      res.json(userID);
     });
   });
 
@@ -70,13 +76,31 @@ app.prepare()
     });
   });
 
-  // server.post('/api/createuser', urlencodedParser, function (req, res) {
-  //   req.body.first_name
-  //
-  //   db.allArticles().then(function(articles) {
-  //     res.json(articles);
-  //   });
-  // });
+  server.post('/api/edit/article', function (req, res) {
+    console.log(req.body);
+
+    // db.editArticle()
+
+    res.send("Success!");
+  });
+
+  server.get('/api/exists/article/:slug', function (req, res) {
+    db.articleExists(req.params.slug, function(exists) {
+      res.send(exists);
+    })
+  });
+
+  server.get('/api/exists/user/:username', function (req, res) {
+    db.userExists(req.params.username, function(exists) {
+      res.send(exists);
+    })
+  });
+
+  server.get('/api/exists/file/:slug', function (req, res) {
+    db.fileExists(req.params.slug, function(exists) {
+      res.send(exists);
+    })
+  });
 
   server.use(express.static("static"));
 
