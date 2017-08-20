@@ -76,6 +76,12 @@ app.prepare()
     });
   });
 
+  server.get('/api/files/:slug', function (req, res) {
+    db.getFile(req.params.slug).then(function(file) {
+      res.json(file);
+    });
+  });
+
   server.post('/api/edit/article', function (req, res) {
     console.log(req.body);
 

@@ -33,15 +33,6 @@ exports.allUsers = function() {
   return knex('users').select('users.username', 'users.first_name', 'users.last_name', 'users.article_id', 'users.profile_picture', 'articles.url_slug').leftJoin('articles', 'users.article_id', 'articles.id');
 }
 
-exports.getRelatedFiles = function(aid) { //TODO: Make this work
-  var needed_tags = knex('articles').where({id: aid}).select('needed_tags');
-  return knex('files').whereIn(tags, needed_tags[0]).select('id', 'name', 'file_type', 'url_slug');
-}
-
-exports.getFilesOfType = function(type) {
-  return knex('files').where({file_type: type}).select('*');
-}
-
 exports.getArticle = function(slug) {
   return knex('articles').where({url_slug: slug}).select('*');
 }
@@ -58,8 +49,25 @@ function articleExists(slug, callback) {
 }
 exports.articleExists = articleExists;
 
-exports.getFile = function(fid) {
+exports.getFile = function(slug) {
+  return knex('files').where({url_slug: slug}).select('*');
+}
+
+exports.getFileByID = function(fid) {
   return knex('files').where({id: fid}).select('*');
+}
+/* TODO: Make this work
+exports.getRelatedFiles = function(aid) {
+  var needed_tags = knex('articles').where({id: aid}).select('needed_tags');
+  return knex('files').whereIn(tags, needed_tags[0]).select('id', 'name', 'file_type', 'url_slug');
+}
+*/
+exports.getFilesOfMimetype = function(type) {
+  return knex('files').where({mimetype: type}).select('*');
+}
+
+exports.getFilesWithExtension = function(extension) {
+  return knex('files').where({extension: extension}).select('*');
 }
 
 function fileExists(slug, callback) {
