@@ -9,6 +9,7 @@ var folders = {};
 var folderQ = async.queue(function(folderID, folderCallback) {
   gdrive.getFolders(folderID, folderCallback);
 }, 1);
+
 folderQ.drain = function() {
   console.log('The folders are done!');
   syncFiles();
@@ -17,6 +18,7 @@ folderQ.drain = function() {
 var fileQ = async.queue(function(folderID, fileCallback) {
   gdrive.getFiles(folderID, fileCallback);
 }, 1);
+
 fileQ.drain = function() {
   console.log('The files are done!');
 }

@@ -16,7 +16,7 @@ const Index = (props) => (
 )
 
 Index.getInitialProps = async function() {
-  const res = await fetch('http://localhost:3000/api/articles')
+  const res = await fetch('https://localhost/api/articles')
   const data = await res.json()
 
   console.log(`Show data fetched. Count: ${data.length}`)

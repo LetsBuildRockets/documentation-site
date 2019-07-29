@@ -16,7 +16,7 @@ const User = (props) => (
 )
 
 User.getInitialProps = async function() {
-  const res = await fetch('http://localhost:3000/api/users')
+  const res = await fetch('https://localhost/api/users')
   const data = await res.json()
 
   console.log(`Show data fetched. Count: ${data.length}`)

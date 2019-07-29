@@ -15,6 +15,9 @@ const Header = (props) => (
     <Link href="/edit">
       <a style={linkStyle}>Edit</a>
     </Link>
+    <Link href="/login">
+      <a style={linkStyle}>Log In</a>
+    </Link>
     {props.children}
     <hr />
   </div>

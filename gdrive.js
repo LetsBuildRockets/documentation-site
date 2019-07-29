@@ -1,5 +1,5 @@
 const google = require('googleapis');
-const key = require('./gdrive_secret.json');
+const key = require('./gdrive_secret.json'); // this is found here https://console.cloud.google.com/iam-admin/serviceaccounts?folder=&organizationId=&project=lets-build-rockets
 const drive = google.drive('v2');
 const jwtClient = new google.auth.JWT(
   key.client_email,

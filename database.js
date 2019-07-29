@@ -1,10 +1,11 @@
 var pg = require('pg');
+var KnexQueryBuilder = require('knex/lib/query/builder');
 var Promise = require('bluebird');
 
 var knex = require('knex')({
   client: 'pg',
   connection: {
-    host: '73.47.211.152',
+    host: '192.168.2.128',
     database : 'postgres',
     user : 'postgres',
     password : 'idk-a-pword',
@@ -14,7 +15,13 @@ var knex = require('knex')({
 
 exports.knex = knex;
 
-
+KnexQueryBuilder.prototype.auth = function(username, password){
+	return this.whereRaw("username = ? AND password = crypt(?, password)", [username, password]);
+  //AND password = crpyt(??, password)
+};
+knex.queryBuilder = function(){
+	return new KnexQueryBuilder(knex.client);
+};
 // Functions to get info from the database:
 
 exports.allArticles = function() {
@@ -86,13 +93,20 @@ exports.getUserIDByUsername = function(username) {
   return knex('users').where({username: username}).select('id');
 }
 
-function userExists(username, callback) {
+exports.userExists =function userExists(username, callback) {
   knex('users').where({username: username}).select('*').then(function(user) {
     var exists = (user.length > 0);
     callback(exists);
   });
 }
-exports.userExists = userExists;
+
+exports.authUser =function authUser(username, password, callback) {
+  knex('users').auth(username, password).then(function(user) {
+    //var exists = (user.length > 0);
+    //callback(exists);
+    callback(user)
+  });
+}
 
 
 // Functions to edit info in the database:

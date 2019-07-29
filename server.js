@@ -1,25 +1,32 @@
 const express = require('express');
 const next = require('next');
 const schedule = require('node-schedule');
+const bodyParser = require('body-parser');
+const https = require('https');
+const fs = require('fs')
+const session = require('express-session');
+const cors = require('cors')
+
 const db = require('./database');
 const gdrive = require('./gdrive.js');
-
 const dev = process.env.NODE_ENV !== 'production'
+
 const app = next({ dev })
 const handle = app.getRequestHandler()
+
 
 // gdrive.getFile('0BwFaRrEmPx2yNk9QdFFCZ0hCbzQ', function(data) {
 //   console.log(data);
 // });
-//
-// gdrive.setFileTitle('0BwFaRrEmPx2yNk9QdFFCZ0hCbzQ', 'Parachute Calculations');
-//
-// gdrive.setFileDescription('0BwFaRrEmPx2yNk9QdFFCZ0hCbzQ', 'These are some cool calculations!');
-//
-// gdrive.getFiles('0BwFaRrEmPx2yNjZFYzQ5X2t6X0k', function(data) {
-//   console.log(data.items);
-//   console.log(data.items.length);
-// })
+
+//gdrive.setFileTitle('0BwFaRrEmPx2yNk9QdFFCZ0hCbzQ', 'Parachute Calculations');
+
+//gdrive.setFileDescription('0BwFaRrEmPx2yNk9QdFFCZ0hCbzQ', 'These are some cool calculations!');
+
+gdrive.getFiles('0BwFaRrEmPx2yNjZFYzQ5X2t6X0k', function(data) {
+  console.log(data.items);
+  console.log(data.items.length);
+})
 
 var rule = new schedule.RecurrenceRule();
 rule.hour = 0;
@@ -33,6 +40,24 @@ function autoUpdate() {
 app.prepare()
 .then(() => {
   const server = express()
+  https.createServer({
+    key: fs.readFileSync('server.key'),
+    cert: fs.readFileSync('server.cert')
+  }, server).listen(443, err => {
+			if (err) throw err
+			// eslint-disable-next-line no-console
+			console.log('> Ready on https://localhost:8000')
+	})
+
+  server.use(session({
+  	secret: 'super-secret',
+  	resave: true,
+  	saveUninitialized: true
+  }));
+
+  server.use(cors())
+  server.use(express.static("static"));
+  server.use(bodyParser.json());
 
   server.get('/a/:slug', (req, res) => {
     const actualPage = '/article'
@@ -90,6 +115,49 @@ app.prepare()
     res.send("Success!");
   });
 
+  server.post('/api/login', function (req, res) {
+    console.log(req.body);
+
+    db.authUser(req.body.username, req.body.password, function(user) {
+      console.log(user)
+    });
+    res.send("Success!");
+  });
+
+  server.post('/api/edit/user', function (req, res) {
+    console.log(req.body);
+    if(req.body.first_name == "") {
+      res.status(400);
+      res.send("first name must not be blank!");
+      return
+    } else if(req.body.last_name == "") {
+      res.status(400);
+      res.send("last must not be blank!");
+      return
+    } else if(req.body.username == "") {
+      res.status(400);
+      res.send("username must not be blank!");
+      return
+    } else if(req.body.has_article == '') {
+      res.status(400);
+      res.send("please select if the user has an article already!");
+      return
+    } else {
+      db.userExists(req.body.username, function(exists) {
+        if(exists) {
+          res.status(400);
+          res.send("username already exists!");
+        } else {
+          db.editUser()
+          res.status(201)
+          res.send("winner winner chkicken dinner!");
+        }
+      })
+    }
+
+    // db.editArticle()
+  });
+
   server.get('/api/exists/article/:slug', function (req, res) {
     db.articleExists(req.params.slug, function(exists) {
       res.send(exists);
@@ -108,16 +176,14 @@ app.prepare()
     })
   });
 
-  server.use(express.static("static"));
-
   server.get('*', (req, res) => {
     return handle(req, res)
   })
 
-  server.listen(3000, (err) => {
-    if (err) throw err
-    console.log('> Ready on http://localhost:3000')
-  })
+  // server.listen(80, (err) => {
+  //   if (err) throw err
+  //   console.log('> Ready on https://localhost')
+  // })
 })
 .catch((ex) => {
   console.error(ex.stack)

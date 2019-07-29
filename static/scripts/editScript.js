@@ -15,6 +15,7 @@ var article_needed_tags = new Taggle("article_needed_tags");
 var file_tags = new Taggle("file_tags");
 
 document.getElementById('article_submit').onclick = attemptSubmitArticle;
+document.getElementById('user_submit').onclick = attemptSubmitUser;
 
 function getAuthorIDs() {
   var authors = squash(article_authors.getTagValues());
@@ -22,7 +23,7 @@ function getAuthorIDs() {
 
   for (var n in authors) {
     var authorRequest = new XMLHttpRequest();
-    authorRequest.open("GET", "http://localhost:3000/api/users/username/" + authors[n], false);
+    authorRequest.open("GET", "https://localhost/api/users/username/" + authors[n], false);
     authorRequest.send( null );
     console.log(authorRequest.responseText);
     if (authorRequest.responseText == "[]") {
@@ -34,6 +35,22 @@ function getAuthorIDs() {
   return authorIDs;
 }
 
+function attemptSubmitUser() {
+  var data = {};
+
+  data.first_name = document.getElementById('edit_user_first_name').value;
+  data.last_name = document.getElementById('edit_user_last_name').value;
+  data.username = document.getElementById('edit_user_username').value;
+  data.profilepicture = document.getElementById('edit_user_profilepicture').value;
+  data.has_article = document.getElementById('edit_user_has_article').value;
+
+  var newUserRequest = new XMLHttpRequest();
+  newUserRequest.open("POST", "https://localhost/api/edit/user", false);
+  newUserRequest.setRequestHeader("Content-type", "application/json");
+  newUserRequest.send(JSON.stringify(data));
+  window.alert(newUserRequest.responseText);
+}
+
 function attemptSubmitArticle() {
   var authorIDs = getAuthorIDs();
   if (authorIDs = undefined) {
@@ -42,7 +59,7 @@ function attemptSubmitArticle() {
   var slug = document.getElementById("article_slug").value;
 
   var slugRequest = new XMLHttpRequest();
-  slugRequest.open("GET", "http://localhost:3000/api/exists/article/" + slug, false);
+  slugRequest.open("GET", "https://localhost/api/exists/article/" + slug, false);
   slugRequest.send( null );
   if (slugRequest.responseText == "true") {
     window.alert(slug + " is already being used!");
@@ -60,7 +77,7 @@ function attemptSubmitArticle() {
     data.needed_tags = squash(article_needed_tags.getTagValues());
 
     var articleRequest = new XMLHttpRequest();
-    articleRequest.open("POST", "http://localhost:3000/api/edit/article", false);
+    articleRequest.open("POST", "https://localhost/api/edit/article", false);
     articleRequest.setRequestHeader("Content-type", "application/json");
     articleRequest.send(data);
     window.alert(articleRequest.responseText);
