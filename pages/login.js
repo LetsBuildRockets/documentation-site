@@ -17,9 +17,8 @@ const Login = (props) => (
   </Layout>
 )
 
-Login.getInitialProps = async function() {
-  return {
-  }
+Login.getInitialProps = async function(ctx) {
+  return {}
 }
 
 export default Login

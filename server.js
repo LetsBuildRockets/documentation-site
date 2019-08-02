@@ -13,7 +13,7 @@ const dev = process.env.NODE_ENV !== 'production'
 
 const app = next({ dev })
 const handle = app.getRequestHandler()
-
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 // gdrive.getFile('0BwFaRrEmPx2yNk9QdFFCZ0hCbzQ', function(data) {
 //   console.log(data);
@@ -23,10 +23,10 @@ const handle = app.getRequestHandler()
 
 //gdrive.setFileDescription('0BwFaRrEmPx2yNk9QdFFCZ0hCbzQ', 'These are some cool calculations!');
 
-gdrive.getFiles('0BwFaRrEmPx2yNjZFYzQ5X2t6X0k', function(data) {
-  console.log(data.items);
-  console.log(data.items.length);
-})
+// gdrive.getFiles('0BwFaRrEmPx2yNjZFYzQ5X2t6X0k', function(data) {
+//   console.log(data.items);
+//   console.log(data.items.length);
+// })
 
 var rule = new schedule.RecurrenceRule();
 rule.hour = 0;
@@ -36,6 +36,13 @@ function autoUpdate() {
   const dbSync = require('./dbSync.js');
   dbSync.update();
 }
+
+var auth = function(req, res, next) {
+  if (req.session && req.session.admin)
+    return next();
+  else
+    return res.sendStatus(401);
+};
 
 app.prepare()
 .then(() => {
@@ -65,7 +72,7 @@ app.prepare()
     app.render(req, res, actualPage, queryParams);
   })
 
-  server.get('/api/users', function (req, res) {
+  server.get('/api/users', auth, function (req, res) {
     db.allUsers().then(function(users) {
       res.json(users);
     });
@@ -87,6 +94,16 @@ app.prepare()
     db.getUser(req.params.id).then(function(user) {
       res.json(user);
     });
+  });
+
+
+  server.get('/api/users/me', function (req, res) {
+    if(typeof req.session.user !== 'undefined') {
+      console.log("user data:" + req.session.user);
+      res.json(req.session.user);
+    } else {
+      res.json({});
+    }
   });
 
   server.get('/api/users/username/:username', function (req, res) {
@@ -119,9 +136,24 @@ app.prepare()
     console.log(req.body);
 
     db.authUser(req.body.username, req.body.password, function(user) {
-      console.log(user)
+      if(user.length > 0) {
+        req.session.user = {};
+        req.session.user.username = user[0].username;
+        req.session.user.first_name = user[0].first_name;
+        req.session.user.last_name = user[0].last_name;
+        req.session.admin = true;
+        res.status(201);
+        res.send("login success!");
+      } else {
+        res.status(401);
+        res.send("Incorrect Username/Password!");
+      }
     });
-    res.send("Success!");
+  });
+
+  server.get('/api/logout', function (req, res) {
+    req.session.destroy();
+    res.send("logout success!");
   });
 
   server.post('/api/edit/user', function (req, res) {

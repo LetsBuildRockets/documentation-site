@@ -85,8 +85,8 @@ function fileExists(slug, callback) {
 }
 exports.fileExists = fileExists;
 
-exports.getUser = function(uid) {
-  return knex('users').where({'users.id': uid}).select('users.username', 'users.first_name', 'users.last_name', 'users.article_id', 'users.profile_picture', 'articles.url_slug').leftJoin('articles', 'users.article_id', 'articles.id');
+exports.getUser = function(id) {
+  return knex('users').where({'users.id': id}).select('users.username', 'users.first_name', 'users.last_name', 'users.article_id', 'users.profile_picture', 'articles.url_slug').leftJoin('articles', 'users.article_id', 'articles.id');
 }
 
 exports.getUserIDByUsername = function(username) {
@@ -102,8 +102,6 @@ exports.userExists =function userExists(username, callback) {
 
 exports.authUser =function authUser(username, password, callback) {
   knex('users').auth(username, password).then(function(user) {
-    //var exists = (user.length > 0);
-    //callback(exists);
     callback(user)
   });
 }
