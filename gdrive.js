@@ -1,25 +1,25 @@
-const google = require('googleapis');
-const key = require('./gdrive_secret.json'); // this is found here https://console.cloud.google.com/iam-admin/serviceaccounts?folder=&organizationId=&project=lets-build-rockets
-const drive = google.drive('v2');
+const google = require('googleapis')
+const key = require('./gdrive_secret.json') // this is found here https://console.cloud.google.com/iam-admin/serviceaccounts?folder=&organizationId=&project=lets-build-rockets
+const drive = google.drive('v2')
 const jwtClient = new google.auth.JWT(
   key.client_email,
   null,
   key.private_key,
   ['https://www.googleapis.com/auth/drive',
-  'https://www.googleapis.com/auth/drive.appdata',
-  'https://www.googleapis.com/auth/drive.file',
-  'https://www.googleapis.com/auth/drive.metadata',
-  'https://www.googleapis.com/auth/drive.metadata.readonly',
-  'https://www.googleapis.com/auth/drive.photos.readonly',
-  'https://www.googleapis.com/auth/drive.readonly'], // an array of auth scopes
+    'https://www.googleapis.com/auth/drive.appdata',
+    'https://www.googleapis.com/auth/drive.file',
+    'https://www.googleapis.com/auth/drive.metadata',
+    'https://www.googleapis.com/auth/drive.metadata.readonly',
+    'https://www.googleapis.com/auth/drive.photos.readonly',
+    'https://www.googleapis.com/auth/drive.readonly'], // an array of auth scopes
   null
-);
+)
 
-exports.getFolders = function(folderID, callback) {
-  jwtClient.authorize(function (err, tokens) {
+exports.getFolders = (folderID, callback) => {
+  jwtClient.authorize((err, tokens) => {
     if (err) {
-      console.log(err);
-      return;
+      console.log(err)
+      return
     }
 
     drive.files.list({
@@ -28,20 +28,21 @@ exports.getFolders = function(folderID, callback) {
       q: '\'' + folderID + '\' in parents and mimeType = \'application/vnd.google-apps.folder\'',
       orderBy: 'title',
       fields: 'items(id,title)'
-    }, function (err, resp) {
-      if (err != null)
-        console.log("Error:", err);
-      //TODO: Make it retry if there's an error.
-      callback(resp);
-    });
-  });
+    }, (err, resp) => {
+      if (err != null) {
+        console.log('Error:', err)
+      }
+      // TODO: Make it retry if there's an error.
+      callback(resp)
+    })
+  })
 }
 
-exports.getFiles = function(folderID, callback) {
-  jwtClient.authorize(function (err, tokens) {
+exports.getFiles = (folderID, callback) => {
+  jwtClient.authorize((err, tokens) => {
     if (err) {
-      console.log(err);
-      return;
+      console.log(err)
+      return
     }
 
     drive.files.list({
@@ -50,69 +51,73 @@ exports.getFiles = function(folderID, callback) {
       q: '\'' + folderID + '\' in parents and mimeType != \'application/vnd.google-apps.folder\'',
       orderBy: 'title',
       fields: 'items(id,parents/id,title,description,fullFileExtension,createdDate,modifiedDate,mimeType)'
-    }, function (err, resp) {
-      if (err != null)
-        console.log("Error:", err);
-      //TODO: Make it retry if there's an error.
-      callback(resp);
-    });
-  });
+    }, (err, resp) => {
+      if (err != null) {
+        console.log('Error:', err)
+      }
+      // TODO: Make it retry if there's an error.
+      callback(resp)
+    })
+  })
 }
 
-exports.getFile = function(fileID, callback) {
-  jwtClient.authorize(function (err, tokens) {
+exports.getFile = (fileID, callback) => {
+  jwtClient.authorize((err, tokens) => {
     if (err) {
-      console.log(err);
-      return;
+      console.log(err)
+      return
     }
 
     drive.files.get({
       auth: jwtClient,
       fileId: fileID
-    }, function (err, resp) {
-      if (err != null)
-        console.log("Error:", err);
-      callback(resp);
-    });
-  });
+    }, (err, resp) => {
+      if (err != null) {
+        console.log('Error:', err)
+      }
+      callback(resp)
+    })
+  })
 }
 
-exports.setFileTitle = function(fileID, newTitle) {
-  jwtClient.authorize(function (err, tokens) {
+exports.setFileTitle = (fileID, newTitle) => {
+  jwtClient.authorize((err, tokens) => {
     if (err) {
-      console.log(err);
-      return;
+      console.log(err)
+      return
     }
 
     drive.files.patch({
       auth: jwtClient,
       fileId: fileID,
       setModifiedDate: true,
-      resource: {title: newTitle}
-    }, function (err, resp) {
-      if (err != null)
-        console.log("Error:", err);
-      console.log(resp);
-    });
-  });
+      resource: { title: newTitle }
+    }, (err, resp) => {
+      if (err != null) {
+        console.log('Error:', err)
+      }
+      console.log(resp)
+    })
+  })
 }
 
-exports.setFileDescription = function(fileID, newDescription) {
-  jwtClient.authorize(function (err, tokens) {
+exports.setFileDescription = (fileID, newDescription) => {
+  jwtClient.authorize((err, tokens) => {
     if (err) {
-      console.log(err);
-      return;
+      console.log(err)
+      return
     }
 
     drive.files.patch({
       auth: jwtClient,
       fileId: fileID,
       setModifiedDate: true,
-      resource: {description: newDescription}
-    }, function (err, resp) {
-      if (err != null)
-        console.log("Error:", err);
-      console.log(resp);
-    });
-  });
+      resource: { description: newDescription }
+    }, (err, resp) => {
+      if (err != null) {
+        console.log('Error:', err)
+      }
+      console.log(resp)
+    })
+  })
 }

@@ -1,96 +1,105 @@
-document.getElementById('selection').onchange = function() {
-  var e = document.getElementById('selection');
-  var selection = e.options[e.selectedIndex].value;
+window.onload = function () {
+  setTimeout(() => {
+    article_authors._add()
+    article_tags._add()
+    article_needed_tags._add()
+    file_tags._add()
+  }, 500)
+}
 
-  document.getElementById('user').setAttribute('hidden', '');
-  document.getElementById('article').setAttribute('hidden', '');
-  document.getElementById('file').setAttribute('hidden', '');
+document.getElementById('selection').onchange = function () {
+  var e = document.getElementById('selection')
+  var selection = e.options[e.selectedIndex].value
 
-  document.getElementById(selection).removeAttribute('hidden');
-};
+  document.getElementById('user').setAttribute('hidden', '')
+  document.getElementById('article').setAttribute('hidden', '')
+  document.getElementById('file').setAttribute('hidden', '')
 
-var article_authors = new Taggle("article_authors");
-var article_tags = new Taggle("article_tags");
-var article_needed_tags = new Taggle("article_needed_tags");
-var file_tags = new Taggle("file_tags");
+  document.getElementById(selection).removeAttribute('hidden')
+}
 
-document.getElementById('article_submit').onclick = attemptSubmitArticle;
-document.getElementById('user_submit').onclick = attemptSubmitUser;
+var article_authors = new Taggle('article_authors')
+var article_tags = new Taggle('article_tags')
+var article_needed_tags = new Taggle('article_needed_tags')
+var file_tags = new Taggle('file_tags')
 
-function getAuthorIDs() {
-  var authors = squash(article_authors.getTagValues());
-  var authorIDs = [];
+document.getElementById('article_submit').onclick = attemptSubmitArticle
+document.getElementById('user_submit').onclick = attemptSubmitUser
+
+function getAuthorIDs () {
+  var authors = squash(article_authors.getTagValues())
+  var authorIDs = []
 
   for (var n in authors) {
-    var authorRequest = new XMLHttpRequest();
-    authorRequest.open("GET", "https://localhost/api/users/username/" + authors[n], false);
-    authorRequest.send( null );
-    console.log(authorRequest.responseText);
-    if (authorRequest.responseText == "[]") {
-      window.alert(authors[n] + " isn't a legit user, yo!");
-      return undefined;
+    var authorRequest = new XMLHttpRequest()
+    authorRequest.open('GET', 'https://localhost/api/users/username/' + authors[n], false)
+    authorRequest.send(null)
+    console.log(authorRequest.responseText)
+    if (authorRequest.responseText === '[]') {
+      window.alert(authors[n] + ' isn\'t a legit user, yo!')
+      return undefined
     }
-    authorIDs.push(authorRequest.responseText);
+    authorIDs.push(authorRequest.responseText)
   }
-  return authorIDs;
+  return authorIDs
 }
 
-function attemptSubmitUser() {
-  var data = {};
+function attemptSubmitUser () {
+  var data = {}
 
-  data.first_name = document.getElementById('edit_user_first_name').value;
-  data.last_name = document.getElementById('edit_user_last_name').value;
-  data.username = document.getElementById('edit_user_username').value;
-  data.profilepicture = document.getElementById('edit_user_profilepicture').value;
-  data.has_article = document.getElementById('edit_user_has_article').value;
+  data.first_name = document.getElementById('edit_user_first_name').value
+  data.last_name = document.getElementById('edit_user_last_name').value
+  data.username = document.getElementById('edit_user_username').value
+  data.profilepicture = document.getElementById('edit_user_profilepicture').value
+  data.has_article = document.getElementById('edit_user_has_article').value
 
-  var newUserRequest = new XMLHttpRequest();
-  newUserRequest.open("POST", "https://localhost/api/edit/user", false);
-  newUserRequest.setRequestHeader("Content-type", "application/json");
-  newUserRequest.send(JSON.stringify(data));
-  window.alert(newUserRequest.responseText);
+  var newUserRequest = new XMLHttpRequest()
+  newUserRequest.open('POST', 'https://localhost/api/edit/user', false)
+  newUserRequest.setRequestHeader('Content-type', 'application/json')
+  newUserRequest.send(JSON.stringify(data))
+  window.alert(newUserRequest.responseText)
 }
 
-function attemptSubmitArticle() {
-  var authorIDs = getAuthorIDs();
-  if (authorIDs = undefined) {
-    return false;
+function attemptSubmitArticle () {
+  var authorIDs = getAuthorIDs()
+  if (authorIDs === undefined) {
+    return false
   }
-  var slug = document.getElementById("article_slug").value;
+  var slug = document.getElementById('article_slug').value
 
-  var slugRequest = new XMLHttpRequest();
-  slugRequest.open("GET", "https://localhost/api/exists/article/" + slug, false);
-  slugRequest.send( null );
-  if (slugRequest.responseText == "true") {
-    window.alert(slug + " is already being used!");
-    return false;
+  var slugRequest = new XMLHttpRequest()
+  slugRequest.open('GET', 'https://localhost/api/exists/article/' + slug, false)
+  slugRequest.send(null)
+  if (slugRequest.responseText === 'true') {
+    window.alert(slug + ' is already being used!')
+    return false
   } else {
-    var data = {};
+    var data = {}
 
-    data.title = document.getElementById('article_title').value;
-    data.content = document.getElementById('article_content').value;
-    data.abstract = document.getElementById('article_abstract').value;
-    data.thumbnail = document.getElementById('article_thumbnail').value;
-    var type_selector = document.getElementById('article_type');
-    data.type = type_selector.options[type_selector.selectedIndex].value;
-    data.tags = squash(article_tags.getTagValues());
-    data.needed_tags = squash(article_needed_tags.getTagValues());
+    data.title = document.getElementById('article_title').value
+    data.content = document.getElementById('article_content').value
+    data.abstract = document.getElementById('article_abstract').value
+    data.thumbnail = document.getElementById('article_thumbnail').value
+    var type_selector = document.getElementById('article_type')
+    data.type = type_selector.options[type_selector.selectedIndex].value
+    data.tags = squash(article_tags.getTagValues())
+    data.needed_tags = squash(article_needed_tags.getTagValues())
 
-    var articleRequest = new XMLHttpRequest();
-    articleRequest.open("POST", "https://localhost/api/edit/article", false);
-    articleRequest.setRequestHeader("Content-type", "application/json");
-    articleRequest.send(data);
-    window.alert(articleRequest.responseText);
+    var articleRequest = new XMLHttpRequest()
+    articleRequest.open('POST', 'https://localhost/api/edit/article', false)
+    articleRequest.setRequestHeader('Content-type', 'application/json')
+    articleRequest.send(data)
+    window.alert(articleRequest.responseText)
   }
 }
 
 // This removes duplicates from arrays
-function squash(arr) {
-  var tmp = [];
+function squash (arr) {
+  var tmp = []
   for (var i = 0; i < arr.length; i++) {
-    if (tmp.indexOf(arr[i]) == -1) {
-      tmp.push(arr[i]);
+    if (tmp.indexOf(arr[i]) === -1) {
+      tmp.push(arr[i])
     }
   }
-  return tmp;
+  return tmp
 }

@@ -12,15 +12,14 @@ const formStyle = {
 
 const Layout = (props) => (
   <div style={layoutStyle}>
-    <Header>
-      <form id="editors" style={formStyle}>
-        <select id="selection" name="editor">
-          <option value="article">Article</option>
-          <option value="file">File</option>
-          <option value="user">User</option>
-        </select>
-      </form>
-    </Header>
+    <Header />
+    <form id="editors" style={formStyle}>
+      <select id="selection" name="editor">
+        <option value="article">Article</option>
+        <option value="file">File</option>
+        <option value="user">User</option>
+      </select>
+    </form>
     {props.children}
   </div>
 )

@@ -5,23 +5,41 @@ import fetch from 'isomorphic-unfetch'
 const Article = (props) => (
     <Layout>
       <h1>{props.article.title}</h1>
-      <h3>By: <Link as={`/a/${props.article.author_data.url_slug}`} href={`/article?slug=${props.article.author_data.url_slug}`}>
-        <a>{props.article.author_data.first_name} {props.article.author_data.last_name}</a>
-      </Link></h3>
+      <h3>By: { props.article.author_url_slug ? (
+        <a href = {`/a/${props.article.author_url_slug}`}>{props.article.author_first_name} {props.article.author_last_name}</a>
+      ) : (
+        `${props.article.author_first_name} ${props.article.author_last_name}`
+      )}
+      </h3>
+      {props.loggedin && (<Link as={`/edit/${props.article.url_slug}`} href={`/edit?slug=${props.article.url_slug}`}><a>Edit</a></Link>)}
       <p>{props.article.content}</p>
     </Layout>
 )
+
+function amiloggedin() {
+  return (fetch('https://localhost/api/users/me',{headers: { 'Content-Type': 'application/json' }}).then((res) => {
+    return res.json();
+  }).then((data) => {
+    if (data && data.error) {
+      return { 'error': 'Something went wrong' }
+    }
+    if(typeof data.username !== 'undefined') {
+      return true
+    } else {
+      return false;
+    }
+  }))
+}
 
 Article.getInitialProps = async function (context) {
   const { slug } = context.query
   const res = await fetch(`https://localhost/api/articles/${slug}`)
   const article = (await res.json())[0]
-  const res2 = await fetch(`https://localhost/api/users/id/${article.author_id}`)
-  article.author_data = (await res2.json())[0]
+  console.log(article);
+  console.log('Fetched article: ', article.title)
 
-  console.log(`Fetched article: ${article.title}`)
-
-  return { article }
+  const loggedin = await amiloggedin();
+  return { article, loggedin: loggedin }
 }
 
 export default Article

@@ -6,50 +6,26 @@ const linkStyle = {
 }
 
 export default class extends Component {
-
   constructor(props){
     super(props);
-    this.state = {};
-    this.state.login_out = (
-      <Link href="/login">
-        <a style={linkStyle}>Log In</a>
-      </Link>
-    )
+    console.log("header props:", props);
   }
 
-  async componentDidMount(ctx) {
-    try {
-      var res = await fetch('https://localhost/api/users/me',{headers: { 'Content-Type': 'application/json' }});
-      var data = await res.json();
-      if (data && data.error) {
-        return { 'error': 'Something went wrong' }
-      }
-      console.log(data);
-      if(typeof data.username !== 'undefined') {
-        this.setState({
-          login_out: (
-            <a href='/api/logout' style={linkStyle}>Logout</a>
-          )
-        })
-      }
-    } catch(error) {
-      console.log(error);
-    }
-  }
-
-  render(props) {
+  render() {
     return (
       <div>
         <Link href="/">
           <a style={linkStyle}>Articles</a>
         </Link>
-        <Link href="/users">
-          <a style={linkStyle}>Users</a>
-        </Link>
-        <Link href="/edit">
-          <a style={linkStyle}>Edit</a>
-        </Link>
-        {this.state.login_out}
+        {this.props.loggedin ? (
+          <div>
+          <a href='/users' style={linkStyle}>Users</a>
+          <a href='/edit' style={linkStyle}>Edit</a>
+          <a href='/api/logout' style={linkStyle}>Logout</a>
+          </div>
+        ):(
+          <a href='/login' style={linkStyle}>Log In</a>
+        )}
         <hr />
       </div>
     )

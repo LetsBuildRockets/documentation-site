@@ -1,14 +1,18 @@
-document.getElementById('login_submit').onclick = login_submit;
+document.getElementById('login_submit').onclick = loginSumbit
 
-function login_submit() {
-  var data = {};
+function loginSumbit () {
+  var data = {}
 
-  data.username = document.getElementById('username').value;
-  data.password = document.getElementById('password').value;
+  data.username = document.getElementById('username').value
+  data.password = document.getElementById('password').value
 
-  var newUserRequest = new XMLHttpRequest();
-  newUserRequest.open("POST", "https://localhost/api/login", false);
-  newUserRequest.setRequestHeader("Content-type", "application/json");
-  newUserRequest.send(JSON.stringify(data));
-  window.alert(newUserRequest.responseText);
+  var newUserRequest = new XMLHttpRequest()
+  newUserRequest.open('POST', 'https://localhost/api/login', false)
+  newUserRequest.setRequestHeader('Content-type', 'application/json')
+  newUserRequest.send(JSON.stringify(data))
+  window.alert(newUserRequest.responseText)
+  console.log(newUserRequest.status)
+  if (newUserRequest.status === 201) {
+    window.location.href = '/'
+  }
 }
