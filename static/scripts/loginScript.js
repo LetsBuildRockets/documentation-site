@@ -1,4 +1,4 @@
-const host = process.env.HOST || 'localhost';
+const host = process.env.REACT_APP_BASE_URL || 'localhost';
 
 document.getElementById('login_submit').onclick = loginSumbit
 

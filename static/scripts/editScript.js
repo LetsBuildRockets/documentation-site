@@ -1,4 +1,4 @@
-const host = process.env.HOST || 'localhost';
+const host = process.env.REACT_APP_BASE_URL || 'localhost';
 
 window.onload = function () {
   setTimeout(() => {

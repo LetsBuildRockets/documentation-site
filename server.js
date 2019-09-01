@@ -10,9 +10,11 @@ const cors = require('cors')
 const db = require('./database')
 const gdrive = require('./gdrive.js')
 
+require('dotenv').config()
+
 const dev = process.env.NODE_ENV !== 'production'
 const port = process.env.PORT || 3000;
-const host = process.env.HOST || 'localhost';
+const host = process.env.REACT_APP_BASE_URL || 'localhost';
 
 const app = next({ dev })
 const handle = app.getRequestHandler()

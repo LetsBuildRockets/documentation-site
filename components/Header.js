@@ -1,4 +1,4 @@
-const host = process.env.HOST || 'localhost';
+const host = process.env.REACT_APP_BASE_URL || 'localhost';
 
 import React, { Component } from 'react'
 import Link from 'next/link'
@@ -10,7 +10,7 @@ const linkStyle = {
 export default class extends Component {
   constructor(props){
     super(props);
-    console.log("header props:", props);
+    // console.log("host:", host);
   }
 
   render() {
