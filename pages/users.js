@@ -1,3 +1,5 @@
+const host = process.env.HOST || 'localhost';
+
 import Layout from '../components/mainLayout.js'
 import Link from 'next/link'
 import fetch from 'isomorphic-unfetch'
@@ -27,7 +29,7 @@ export default class extends React.Component {
   }
 
   componentDidMount() {
-    fetch('https://localhost/api/users').then((response) => {
+    fetch(`https://${host}/api/users`).then((response) => {
       return response.json();
     }).then((json) => {
       console.log(json);

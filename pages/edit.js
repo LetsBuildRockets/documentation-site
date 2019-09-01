@@ -1,3 +1,5 @@
+const host = process.env.HOST || 'localhost';
+
 import Layout from '../components/editorLayout.js'
 import User from '../components/editUser.js'
 import Article from '../components/editArticle.js'
@@ -82,7 +84,7 @@ class Edit extends React.Component {
 
     console.log('slug ',this.state.article.slug)
     if(this.state.article.slug) {
-      fetch(`https://localhost/api/articles/${this.state.article.slug}`).then((res) => {
+      fetch(`https://${host}/api/articles/${this.state.article.slug}`).then((res) => {
         return res.json();
       }).then((json) => {
         const article = (json)[0]

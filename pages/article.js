@@ -1,3 +1,5 @@
+const host = process.env.HOST || 'localhost';
+
 import Layout from '../components/mainLayout.js'
 import Link from 'next/link'
 import fetch from 'isomorphic-unfetch'
@@ -17,7 +19,7 @@ const Article = (props) => (
 )
 
 function amiloggedin() {
-  return (fetch('https://localhost/api/users/me',{headers: { 'Content-Type': 'application/json' }}).then((res) => {
+  return (fetch(`https://${host}/api/users/me`,{headers: { 'Content-Type': 'application/json' }}).then((res) => {
     return res.json();
   }).then((data) => {
     if (data && data.error) {
@@ -33,7 +35,7 @@ function amiloggedin() {
 
 Article.getInitialProps = async function (context) {
   const { slug } = context.query
-  const res = await fetch(`https://localhost/api/articles/${slug}`)
+  const res = await fetch(`https://${host}/api/articles/${slug}`)
   const article = (await res.json())[0]
   console.log(article);
   console.log('Fetched article: ', article.title)

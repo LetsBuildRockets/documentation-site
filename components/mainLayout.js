@@ -1,3 +1,5 @@
+const host = process.env.HOST || 'localhost';
+
 import Header from './Header'
 
 const layoutStyle = {
@@ -34,7 +36,7 @@ class Layout extends React.Component {
 
 function amiloggedin() {
   return (
-    fetch('https://localhost/api/users/me',{headers: { 'Content-Type': 'application/json' }}).then((res) => {
+    fetch(`https://${host}/api/users/me`,{headers: { 'Content-Type': 'application/json' }}).then((res) => {
       return res.json();
     }).then((data) => {
       if (data && data.error) {

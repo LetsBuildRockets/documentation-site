@@ -1,3 +1,5 @@
+const host = process.env.HOST || 'localhost';
+
 window.onload = function () {
   setTimeout(() => {
     article_authors._add()
@@ -32,7 +34,7 @@ function getAuthorIDs () {
 
   for (var n in authors) {
     var authorRequest = new XMLHttpRequest()
-    authorRequest.open('GET', 'https://localhost/api/users/username/' + authors[n], false)
+    authorRequest.open('GET', `https://${host}/api/users/username/` + authors[n], false)
     authorRequest.send(null)
     console.log(authorRequest.responseText)
     if (authorRequest.responseText === '[]') {
@@ -54,7 +56,7 @@ function attemptSubmitUser () {
   data.has_article = document.getElementById('edit_user_has_article').value
 
   var newUserRequest = new XMLHttpRequest()
-  newUserRequest.open('POST', 'https://localhost/api/edit/user', false)
+  newUserRequest.open('POST', `https://${host}/api/edit/user`, false)
   newUserRequest.setRequestHeader('Content-type', 'application/json')
   newUserRequest.send(JSON.stringify(data))
   window.alert(newUserRequest.responseText)
@@ -68,7 +70,7 @@ function attemptSubmitArticle () {
   var slug = document.getElementById('article_slug').value
 
   var slugRequest = new XMLHttpRequest()
-  slugRequest.open('GET', 'https://localhost/api/exists/article/' + slug, false)
+  slugRequest.open('GET', `https://${host}/api/exists/article/` + slug, false)
   slugRequest.send(null)
   var data = {
     title:  document.getElementById('article_title').value,
@@ -85,7 +87,7 @@ function attemptSubmitArticle () {
   console.log(data)
 
   var articleRequest = new XMLHttpRequest()
-  articleRequest.open('POST', 'https://localhost/api/edit/article', false)
+  articleRequest.open('POST', `https://${host}/api/edit/article`, false)
   articleRequest.setRequestHeader('Content-type', 'application/json')
   articleRequest.send(JSON.stringify(data))
   window.alert(articleRequest.responseText)

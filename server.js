@@ -9,7 +9,10 @@ const cors = require('cors')
 
 const db = require('./database')
 const gdrive = require('./gdrive.js')
+
 const dev = process.env.NODE_ENV !== 'production'
+const port = process.env.PORT || 3000;
+const host = process.env.HOST || 'localhost';
 
 const app = next({ dev })
 const handle = app.getRequestHandler()
@@ -48,13 +51,14 @@ var auth = function (req, res, next) {
 app.prepare()
   .then(() => {
     const server = express()
+    const staticServer = express()
     https.createServer({
       key: fs.readFileSync('secret/server.key'),
       cert: fs.readFileSync('secret/server.cert')
     }, server).listen(443, err => {
       if (err) throw err
       // eslint-disable-next-line no-console
-      console.log('> Ready on https://localhost')
+      console.log(`> Ready on https://${host}:443`)
     })
 
     server.use(session({
@@ -65,6 +69,7 @@ app.prepare()
 
     server.use(cors())
     server.use(express.static('static'))
+    staticServer.use(express.static('static'))
     server.use(bodyParser.json())
 
     server.get('/a/:slug', (req, res) => {
@@ -133,7 +138,7 @@ app.prepare()
     server.post('/api/edit/article', (req, res) => {
       console.log(req.body)
 
-      //db.editArticle()
+      db.editArticle()
 
       res.send('Success!')
     })
@@ -214,10 +219,10 @@ app.prepare()
       return handle(req, res)
     })
 
-    // server.listen(80, (err) => {
-    //   if (err) throw err
-    //   console.log('> Ready on https://localhost')
-    // })
+    staticServer.listen(port, (err) => {
+      if (err) throw err
+      console.log(`> Ready on http://${host}:${port}`)
+    })
   })
   .catch((ex) => {
     console.error(ex.stack)

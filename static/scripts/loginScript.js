@@ -1,3 +1,5 @@
+const host = process.env.HOST || 'localhost';
+
 document.getElementById('login_submit').onclick = loginSumbit
 
 function loginSumbit () {
@@ -7,7 +9,7 @@ function loginSumbit () {
   data.password = document.getElementById('password').value
 
   var newUserRequest = new XMLHttpRequest()
-  newUserRequest.open('POST', 'https://localhost/api/login', false)
+  newUserRequest.open('POST', `https://${host}/api/login`, false)
   newUserRequest.setRequestHeader('Content-type', 'application/json')
   newUserRequest.send(JSON.stringify(data))
   window.alert(newUserRequest.responseText)
