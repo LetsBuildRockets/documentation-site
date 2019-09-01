@@ -15,7 +15,7 @@ var knex = require('knex')({
 
 exports.knex = knex
 
-KnexQueryBuilder.prototype.auth = (username, password) => {
+KnexQueryBuilder.prototype.auth = function (username, password) {
   return this.whereRaw('username = ? AND password = crypt(?, password)', [username, password])
 }
 knex.queryBuilder = () => {
@@ -100,7 +100,7 @@ exports.getArticleByID = (aid) => {
     .limit(1)
 }
 
-function articleExists (slug, callback) {
+const articleExists = (slug, callback) => {
   knex('articles').where({ url_slug: slug }).select('*').then((article) => {
     var exists = (article.length > 0)
     callback(exists)
@@ -129,12 +129,13 @@ exports.getFilesWithExtension = (extension) => {
   return knex('files').where({ extension: extension }).select('*')
 }
 
-exports.fileExists = function fileExists (slug, callback) {
+const fileExists = (slug, callback) => {
   knex('files').where({ url_slug: slug }).select('*').then((file) => {
     var exists = (file.length > 0)
     callback(exists)
   })
 }
+exports.fileExists = fileExists
 
 exports.getUser = (id) => {
   return knex('users')
@@ -147,7 +148,7 @@ exports.getUserIDByUsername = (username) => {
   return knex('users').where({ username: username }).select('id')
 }
 
-function userExists (username, callback) {
+const userExists = (username, callback) => {
   knex('users').where({ username: username }).select('*').then((user) => {
     var exists = (user.length > 0)
     callback(exists)
@@ -155,7 +156,7 @@ function userExists (username, callback) {
 }
 exports.userExists = userExists
 
-function authUser (username, password, callback) {
+const authUser = (username, password, callback) => {
   knex('users').auth(username, password).then((user) => {
     callback(user)
   })

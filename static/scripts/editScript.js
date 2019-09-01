@@ -23,8 +23,8 @@ var article_tags = new Taggle('article_tags')
 var article_needed_tags = new Taggle('article_needed_tags')
 var file_tags = new Taggle('file_tags')
 
-document.getElementById('article_submit').onclick = attemptSubmitArticle
-document.getElementById('user_submit').onclick = attemptSubmitUser
+// document.getElementById('article_submit').onclick = attemptSubmitArticle
+// document.getElementById('user_submit').onclick = attemptSubmitUser
 
 function getAuthorIDs () {
   var authors = squash(article_authors.getTagValues())
@@ -70,27 +70,25 @@ function attemptSubmitArticle () {
   var slugRequest = new XMLHttpRequest()
   slugRequest.open('GET', 'https://localhost/api/exists/article/' + slug, false)
   slugRequest.send(null)
-  if (slugRequest.responseText === 'true') {
-    window.alert(slug + ' is already being used!')
-    return false
-  } else {
-    var data = {}
-
-    data.title = document.getElementById('article_title').value
-    data.content = document.getElementById('article_content').value
-    data.abstract = document.getElementById('article_abstract').value
-    data.thumbnail = document.getElementById('article_thumbnail').value
-    var type_selector = document.getElementById('article_type')
-    data.type = type_selector.options[type_selector.selectedIndex].value
-    data.tags = squash(article_tags.getTagValues())
-    data.needed_tags = squash(article_needed_tags.getTagValues())
-
-    var articleRequest = new XMLHttpRequest()
-    articleRequest.open('POST', 'https://localhost/api/edit/article', false)
-    articleRequest.setRequestHeader('Content-type', 'application/json')
-    articleRequest.send(data)
-    window.alert(articleRequest.responseText)
+  var data = {
+    title:  document.getElementById('article_title').value,
+    content: document.getElementById('article_content').value,
+    abstract: document.getElementById('article_abstract').value,
+    thumbnail: document.getElementById('article_thumbnail').value,
+    type: document.getElementById('article_type').options[document.getElementById('article_type').selectedIndex].value,
+    tags: squash(article_tags.getTagValues()),
+    needed_tags: squash(article_needed_tags.getTagValues()),
+    author: squash(article_needed_tags.getTagValues()),
+    url_slug: document.getElementById('article_slug').value
   }
+
+  console.log(data)
+
+  var articleRequest = new XMLHttpRequest()
+  articleRequest.open('POST', 'https://localhost/api/edit/article', false)
+  articleRequest.setRequestHeader('Content-type', 'application/json')
+  articleRequest.send(JSON.stringify(data))
+  window.alert(articleRequest.responseText)
 }
 
 // This removes duplicates from arrays

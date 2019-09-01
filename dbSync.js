@@ -6,38 +6,38 @@ const rootFolder = '0B_RM9WoF1XjFMjcwTFhYSHp4c28'
 
 var folders = {}
 
-var folderQ = async.queue(function (folderID, folderCallback) {
+var folderQ = async.queue((folderID, folderCallback) => {
   gdrive.getFolders(folderID, folderCallback)
 }, 1)
 
-folderQ.drain = function () {
+folderQ.drain = () => {
   console.log('The folders are done!')
   syncFiles()
 }
 
-var fileQ = async.queue(function (folderID, fileCallback) {
+var fileQ = async.queue((folderID, fileCallback) => {
   gdrive.getFiles(folderID, fileCallback)
 }, 1)
 
-fileQ.drain = function () {
+fileQ.drain = () => {
   console.log('The files are done!')
 }
 
-exports.update = function () {
+exports.update = () => {
   folders[rootFolder] = []
-  gdrive.getFolders(rootFolder, function (folderResponse) {
+  gdrive.getFolders(rootFolder, (folderResponse) => {
     iterate(folderResponse, [], '')
   })
 }
 
-function iterate (folderResponse, folderList, folderID) {
+const iterate = (folderResponse, folderList, folderID) => {
   if (folderID !== '') {
     folders[folderID] = folderList
     console.log(folderID + ': ' + folderList)
   }
   if (folderResponse != null) {
-    folderResponse.items.forEach(function (folder) {
-      folderQ.push(folder.id, function (newData) {
+    folderResponse.items.forEach((folder) => {
+      folderQ.push(folder.id, (newData) => {
         var newFolderList = folderList.slice()
         newFolderList.push(folder.title)
         iterate(newData, newFolderList, folder.id)
@@ -46,18 +46,18 @@ function iterate (folderResponse, folderList, folderID) {
   }
 }
 
-function syncFiles () {
+const syncFiles = () => {
   for (var key in folders) {
     fileQ.push(key, addFiles)
   }
 }
 
-function addFiles (fileResponse) {
+const addFiles = (fileResponse) => {
   if (fileResponse != null) {
-    fileResponse.items.forEach(function (file) {
+    fileResponse.items.forEach((file) => {
       var parent_titles = []
-      file.parents.forEach(function (parent) {
-        folders[parent.id].forEach(function (parentID) {
+      file.parents.forEach((parent) => {
+        folders[parent.id].forEach((parentID) => {
           parent_titles.push(parentID)
         })
       })

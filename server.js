@@ -49,12 +49,12 @@ app.prepare()
   .then(() => {
     const server = express()
     https.createServer({
-      key: fs.readFileSync('server.key'),
-      cert: fs.readFileSync('server.cert')
+      key: fs.readFileSync('secret/server.key'),
+      cert: fs.readFileSync('secret/server.cert')
     }, server).listen(443, err => {
       if (err) throw err
       // eslint-disable-next-line no-console
-      console.log('> Ready on https://localhost:8000')
+      console.log('> Ready on https://localhost')
     })
 
     server.use(session({
@@ -133,7 +133,7 @@ app.prepare()
     server.post('/api/edit/article', (req, res) => {
       console.log(req.body)
 
-      // db.editArticle()
+      //db.editArticle()
 
       res.send('Success!')
     })
