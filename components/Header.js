@@ -1,3 +1,5 @@
+const host = process.env.HOST || 'localhost';
+
 import React, { Component } from 'react'
 import Link from 'next/link'
 
@@ -14,17 +16,17 @@ export default class extends Component {
   render() {
     return (
       <div>
-        <Link href="/">
+        <Link href={`//${host}/`}>
           <a style={linkStyle}>Articles</a>
         </Link>
         {this.props.loggedin ? (
           <div>
-          <a href='/users' style={linkStyle}>Users</a>
-          <a href='/edit' style={linkStyle}>Edit</a>
-          <a href='/api/logout' style={linkStyle}>Logout</a>
+          <a href={`//${host}/users`} style={linkStyle}>Users</a>
+          <a href={`//${host}/edit`} style={linkStyle}>Edit</a>
+          <a href={`//${host}/api/logout`} style={linkStyle}>Logout</a>
           </div>
         ):(
-          <a href='/login' style={linkStyle}>Log In</a>
+          <a href={`//${host}/login`} style={linkStyle}>Log In</a>
         )}
         <hr />
       </div>
