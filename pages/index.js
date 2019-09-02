@@ -1,5 +1,3 @@
-const host = process.env.REACT_APP_BASE_URL || 'localhost';
-
 import Layout from '../components/mainLayout.js'
 import Link from 'next/link'
 import fetch from 'isomorphic-unfetch'
@@ -18,7 +16,7 @@ const Index = (props) => (
 )
 
 Index.getInitialProps = async function() {
-  const res = await fetch(`https://${host}/api/articles`)
+  const res = await fetch(`https://${window.location.host}/api/articles`)
   const data = await res.json()
 
   console.log(`Show data fetched. Count: ${data.length}`)
