@@ -15,17 +15,17 @@ export default class extends Component {
   render() {
     return (
       <div>
-        <Link href={`//${this.state.host}/`}>
+        <Link href={this.state.host ? `//${this.state.host}/` : ''}>
           <a style={linkStyle}>Articles</a>
         </Link>
         {this.props.loggedin ? (
           <div>
-          <a href={`//${this.state.host}/users`} style={linkStyle}>Users</a>
-          <a href={`//${this.state.host}/edit`} style={linkStyle}>Edit</a>
-          <a href={`//${this.state.host}/api/logout`} style={linkStyle}>Logout</a>
+          <a href={this.state.host ? `//${this.state.host}/users` : ''} style={linkStyle}>Users</a>
+          <a href={this.state.host ? `//${this.state.host}/edit` : ''} style={linkStyle}>Edit</a>
+          <a href={this.state.host ? `//${this.state.host}/api/logout` : ''} style={linkStyle}>Logout</a>
           </div>
         ):(
-          <a href={`//${this.state.host}/login`} style={linkStyle}>Log In</a>
+          <a href={this.state.host ? `//${this.state.host}/login` : ''} style={linkStyle}>Log In</a>
         )}
         <hr />
       </div>

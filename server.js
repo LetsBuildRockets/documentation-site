@@ -55,8 +55,9 @@ app.prepare()
     const server = express()
     const staticServer = server
     https.createServer({
-      key: fs.readFileSync('secret/server.key'),
-      cert: fs.readFileSync('secret/server.cert')
+      key: (fs.existsSync(process.env.PRI_KEY_FILE) ? fs.readFileSync(process.env.PRI_KEY_FILE, 'utf8') : ''),
+      cert: (fs.existsSync(process.env.CERT_FILE) ? fs.readFileSync(process.env.CERT_FILE, 'utf8') : ''),
+      ca: (fs.existsSync(process.env.CA_FILE) ? fs.readFileSync(rocess.env.CA_FILE, 'utf8') : '')
     }, server).listen(443, err => {
       if (err) throw err
       // eslint-disable-next-line no-console
