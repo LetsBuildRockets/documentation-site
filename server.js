@@ -2,6 +2,7 @@ const express = require('express')
 const next = require('next')
 const schedule = require('node-schedule')
 const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser');
 const https = require('https')
 const fs = require('fs')
 const session = require('express-session')
@@ -9,6 +10,7 @@ const cors = require('cors')
 const serveIndex = require('serve-index')
 const db = require('./database')
 const gdrive = require('./gdrive.js')
+const uuidv1 = require('uuid/v1')
 
 require('dotenv').config()
 
@@ -43,7 +45,7 @@ function autoUpdate () {
 }
 
 var auth = function (req, res, next) {
-  if (req.session && req.session.admin) {
+  if (req.session && req.cookies.user_sid) {
     return next()
   } else {
     return res.sendStatus(401)
@@ -53,7 +55,7 @@ var auth = function (req, res, next) {
 app.prepare()
   .then(() => {
     const server = express()
-    const staticServer = server
+    // const staticServer = server
     https.createServer({
       key: (fs.existsSync(process.env.PRI_KEY_FILE) ? fs.readFileSync(process.env.PRI_KEY_FILE, 'utf8') : ''),
       cert: (fs.existsSync(process.env.CERT_FILE) ? fs.readFileSync(process.env.CERT_FILE, 'utf8') : ''),
@@ -65,16 +67,27 @@ app.prepare()
     })
 
     server.use(session({
-      secret: 'super-secret',
+      genid: function(req) {
+        return uuidv1() // use UUIDs for session IDs
+      },
+      key: 'user_sid',
+      secret: 'keyboard cat',
       resave: true,
-      saveUninitialized: true
+      saveUninitialized: false
     }))
+
+    server.use(cookieParser());
+    server.use((req, res, next) => {
+      if (req.cookies.user_sid && !req.session.user) {
+        res.clearCookie('user_sid');
+      }
+      next();
+    });
 
     server.use(cors())
     server.use(express.static('static'))
-    staticServer.use(express.static('static'))
-    staticServer.use('/.well-known', express.static('.well-known'), serveIndex('.well-known'));
-    //staticServer.use(express.static('.well-known', { dotfiles: 'allow' }))
+    // staticServer.use(express.static('static'))
+    // staticServer.use('/.well-known', express.static('.well-known'), serveIndex('.well-known'));
     // server.use(express.static('.well-known', { dotfiles: 'allow' }))
     server.use(bodyParser.json())
 
@@ -115,6 +128,7 @@ app.prepare()
     })
 
     server.get('/api/users/me', (req, res) => {
+      console.log('me request ', req.session)
       if (typeof req.session.user !== 'undefined') {
         console.log('user data:' + req.session.user)
         res.json(req.session.user)
@@ -159,8 +173,9 @@ app.prepare()
           req.session.user.first_name = user[0].first_name
           req.session.user.last_name = user[0].last_name
           req.session.admin = true
+          console.log(req.session)
           res.status(201)
-          res.send('login success!')
+          res.send('Login Success!')
         } else {
           res.status(401)
           res.send('Incorrect Username/Password!')
@@ -169,8 +184,10 @@ app.prepare()
     })
 
     server.get('/api/logout', (req, res) => {
+      res.clearCookie('user_sid');
+      res.redirect('/');
       req.session.destroy()
-      res.send('logout success!')
+      //res.send('logout success!')
     })
 
     server.post('/api/edit/user', (req, res) => {
@@ -225,10 +242,10 @@ app.prepare()
       return handle(req, res)
     })
 
-    staticServer.listen(port, (err) => {
-      if (err) throw err
-      console.log(`> Ready on http://${host}:${port}`)
-    })
+    // staticServer.listen(port, (err) => {
+    //   if (err) throw err
+    //   console.log(`> Ready on http://${host}:${port}`)
+    // })
   })
   .catch((ex) => {
     console.error(ex.stack)

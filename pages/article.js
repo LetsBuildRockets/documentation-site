@@ -16,19 +16,25 @@ class Article extends React.Component {
   render () {
     return (
       <Layout>
-        <h1>{this.state.article.title}</h1>
-        {this.state.article.author_url_slug !== undefined ? (
-          <h3>By: {this.state.article.author_url_slug ? (
-            <a href = {`/a/${this.state.article.author_url_slug}`}>{this.state.article.author_first_name} {this.state.article.author_last_name}</a>
-          ) : (
-            `${this.state.article.author_first_name} ${this.state.article.author_last_name}`
+      {this.state.article !== undefined ? (
+        <div>
+          <h1>{this.state.article.title}</h1>
+          {this.state.article.author_url_slug !== undefined ? (
+            <h3>By: {this.state.article.author_url_slug ? (
+              <a href = {`/a/${this.state.article.author_url_slug}`}>{this.state.article.author_first_name} {this.state.article.author_last_name}</a>
+            ) : (
+              `${this.state.article.author_first_name} ${this.state.article.author_last_name}`
+            )}
+            </h3>
+          ):(
+            <div>loading...</div>
           )}
-          </h3>
-        ):(
-          <div>loading...</div>
-        )}
-        {this.props.loggedin && (<Link as={`/edit/${this.state.article.url_slug}`} href={`/edit?slug=${this.state.article.url_slug}`}><a>Edit</a></Link>)}
-        <p>{this.state.article.content}</p>
+          {this.props.loggedin && (<Link as={`/edit/${this.state.article.url_slug}`} href={`/edit?slug=${this.state.article.url_slug}`}><a>Edit</a></Link>)}
+          <p>{this.state.article.content}</p>
+        </div>
+      ):(
+        <h3>Article Does Not Exist!</h3>
+      )}
       </Layout>
     )
   }
@@ -45,11 +51,11 @@ class Article extends React.Component {
     console.log(this.props.query)
     if(slug !== undefined) {
       fetch(`https://${window.location.host}/api/articles/${slug}`).then((res) => {
-        console.log(`fetched https://${window.location.host}/api/articles/${slug}`)
+        // console.log(`fetched https://${window.location.host}/api/articles/${slug}`)
         return res.json();
       }).then((article) => {
-        console.log('Fetched article: ', article[0].title)
-        console.log(article[0]);
+        // console.log('Fetched article: ', article[0].title)
+         console.log(article[0]);
         this.setState({ article: article[0] })
         this.setState({ slug: slug })
       })

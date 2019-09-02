@@ -27,7 +27,7 @@ export default class extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`https://${host}/api/users`).then((response) => {
+    fetch(`https://${window.location.host}/api/users`).then((response) => {
       return response.json();
     }).then((json) => {
       console.log(json);
