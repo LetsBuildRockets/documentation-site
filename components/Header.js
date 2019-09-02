@@ -1,8 +1,5 @@
-const host = process.env.REACT_APP_BASE_URL || 'localhost';
-
 import React, { Component } from 'react'
 import Link from 'next/link'
-
 const linkStyle = {
   marginRight: 15
 }
@@ -10,26 +7,32 @@ const linkStyle = {
 export default class extends Component {
   constructor(props){
     super(props);
-    // console.log("host:", host);
+    this.state = {
+
+    }
   }
 
   render() {
     return (
       <div>
-        <Link href={`//${host}/`}>
+        <Link href={`//${this.state.host}/`}>
           <a style={linkStyle}>Articles</a>
         </Link>
         {this.props.loggedin ? (
           <div>
-          <a href={`//${host}/users`} style={linkStyle}>Users</a>
-          <a href={`//${host}/edit`} style={linkStyle}>Edit</a>
-          <a href={`//${host}/api/logout`} style={linkStyle}>Logout</a>
+          <a href={`//${this.state.host}/users`} style={linkStyle}>Users</a>
+          <a href={`//${this.state.host}/edit`} style={linkStyle}>Edit</a>
+          <a href={`//${this.state.host}/api/logout`} style={linkStyle}>Logout</a>
           </div>
         ):(
-          <a href={`//${host}/login`} style={linkStyle}>Log In</a>
+          <a href={`//${this.state.host}/login`} style={linkStyle}>Log In</a>
         )}
         <hr />
       </div>
     )
+  }
+
+  componentDidMount() {
+    this.setState({host: window.location.host})
   }
 }

@@ -1,5 +1,3 @@
-const host = process.env.REACT_APP_BASE_URL || 'localhost';
-
 import Layout from '../components/editorLayout.js'
 import User from '../components/editUser.js'
 import Article from '../components/editArticle.js'
@@ -50,6 +48,8 @@ class Edit extends React.Component {
   }
 
   componentDidMount(context) {
+    this.setState({host: window.location.host})
+
     const script1 = document.createElement("script");
     const script2 = document.createElement("script");
     const script3 = document.createElement("script");
@@ -84,7 +84,7 @@ class Edit extends React.Component {
 
     console.log('slug ',this.state.article.slug)
     if(this.state.article.slug) {
-      fetch(`https://${host}/api/articles/${this.state.article.slug}`).then((res) => {
+      fetch(`https://${this.state.host}/api/articles/${this.state.article.slug}`).then((res) => {
         return res.json();
       }).then((json) => {
         const article = (json)[0]

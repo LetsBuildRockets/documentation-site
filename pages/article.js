@@ -1,47 +1,58 @@
-const host = process.env.REACT_APP_BASE_URL || 'localhost';
-
+import qs from 'qs'; // or your query string parser of choice
 import Layout from '../components/mainLayout.js'
 import Link from 'next/link'
 import fetch from 'isomorphic-unfetch'
+import { withRouter } from 'next/router'
 
-const Article = (props) => (
-    <Layout>
-      <h1>{props.article.title}</h1>
-      <h3>By: { props.article.author_url_slug ? (
-        <a href = {`/a/${props.article.author_url_slug}`}>{props.article.author_first_name} {props.article.author_last_name}</a>
-      ) : (
-        `${props.article.author_first_name} ${props.article.author_last_name}`
-      )}
-      </h3>
-      {props.loggedin && (<Link as={`/edit/${props.article.url_slug}`} href={`/edit?slug=${props.article.url_slug}`}><a>Edit</a></Link>)}
-      <p>{props.article.content}</p>
-    </Layout>
-)
+class Article extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      article: {},
+      slug: {}
+    }
+  }
 
-function amiloggedin() {
-  return (fetch(`https://${host}/api/users/me`,{headers: { 'Content-Type': 'application/json' }}).then((res) => {
-    return res.json();
-  }).then((data) => {
-    if (data && data.error) {
-      return { 'error': 'Something went wrong' }
+  render () {
+    return (
+      <Layout>
+        <h1>{this.state.article.title}</h1>
+        {this.state.article.author_url_slug !== undefined && (
+          <h3>By: {this.state.article.author_url_slug ? (
+            <a href = {`/a/${this.state.article.author_url_slug}`}>{this.state.article.author_first_name} {this.state.article.author_last_name}</a>
+          ) : (
+            `${this.state.article.author_first_name} ${this.state.article.author_last_name}`
+          )}
+          </h3>
+        )}
+        {this.props.loggedin && (<Link as={`/edit/${this.state.article.url_slug}`} href={`/edit?slug=${this.state.article.url_slug}`}><a>Edit</a></Link>)}
+        <p>{this.state.article.content}</p>
+      </Layout>
+    )
+  }
+
+  static getInitialProps({query}) {
+    return {query}
+  }
+
+  componentDidMount() {
+    if(typeof window !== 'undefined') {
+      this.setState({host: window.location.host})
     }
-    if(typeof data.username !== 'undefined') {
-      return true
-    } else {
-      return false;
+    const {slug} = this.props.query
+    console.log(this.props.query)
+    if(slug !== undefined) {
+      fetch(`https://${window.location.host}/api/articles/${slug}`).then((res) => {
+        console.log(`fetched https://${window.location.host}/api/articles/${slug}`)
+        return res.json();
+      }).then((article) => {
+        console.log('Fetched article: ', article[0].title)
+        console.log(article[0]);
+        this.setState({ article: article[0] })
+        this.setState({ slug: slug })
+      })
     }
-  }))
+  }
 }
 
-Article.getInitialProps = async function (context) {
-  const { slug } = context.query
-  const res = await fetch(`https://${host}/api/articles/${slug}`)
-  const article = (await res.json())[0]
-  console.log(article);
-  console.log('Fetched article: ', article.title)
-
-  const loggedin = await amiloggedin();
-  return { article, loggedin: loggedin }
-}
-
-export default Article
+export default withRouter(Article)

@@ -1,5 +1,3 @@
-const host = process.env.REACT_APP_BASE_URL || 'localhost';
-
 import Header from './Header'
 
 const layoutStyle = {
@@ -11,7 +9,6 @@ const layoutStyle = {
 class Layout extends React.Component {
   constructor(props){
     super(props);
-    console.log("props:", props)
     this.state = {
       loggedin: false
     }
@@ -25,30 +22,30 @@ class Layout extends React.Component {
     </div>
     )
   }
-
+  amiloggedin = () => {
+    return (
+      fetch(`https://${window.location.host}/api/users/me`,{headers: { 'Content-Type': 'application/json' }}).then((res) => {
+        return res.json();
+      }).then((data) => {
+        if (data && data.error) {
+          return { 'error': 'Something went wrong' }
+        }
+        if(typeof data.username !== 'undefined') {
+          return true
+        } else {
+          return false;
+        }
+      })
+    )
+  }
   componentDidMount() {
-    amiloggedin().then((loggedin) => {
+    this.setState({host: window.location.host})
+    this.amiloggedin().then((loggedin) => {
       console.log("loggedin:", loggedin);
       this.setState({loggedin: loggedin})
     })
   }
 }
 
-function amiloggedin() {
-  return (
-    fetch(`https://${host}/api/users/me`,{headers: { 'Content-Type': 'application/json' }}).then((res) => {
-      return res.json();
-    }).then((data) => {
-      if (data && data.error) {
-        return { 'error': 'Something went wrong' }
-      }
-      if(typeof data.username !== 'undefined') {
-        return true
-      } else {
-        return false;
-      }
-    })
-  )
-}
 
 export default Layout

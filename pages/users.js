@@ -1,5 +1,3 @@
-const host = process.env.REACT_APP_BASE_URL || 'localhost';
-
 import Layout from '../components/mainLayout.js'
 import Link from 'next/link'
 import fetch from 'isomorphic-unfetch'
