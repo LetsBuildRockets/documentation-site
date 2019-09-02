@@ -6,7 +6,7 @@ const https = require('https')
 const fs = require('fs')
 const session = require('express-session')
 const cors = require('cors')
-
+const serveIndex = require('serve-index')
 const db = require('./database')
 const gdrive = require('./gdrive.js')
 
@@ -53,7 +53,7 @@ var auth = function (req, res, next) {
 app.prepare()
   .then(() => {
     const server = express()
-    const staticServer = express()
+    const staticServer = server
     https.createServer({
       key: fs.readFileSync('secret/server.key'),
       cert: fs.readFileSync('secret/server.cert')
@@ -72,6 +72,9 @@ app.prepare()
     server.use(cors())
     server.use(express.static('static'))
     staticServer.use(express.static('static'))
+    staticServer.use('/.well-known', express.static('.well-known'), serveIndex('.well-known'));
+    //staticServer.use(express.static('.well-known', { dotfiles: 'allow' }))
+    // server.use(express.static('.well-known', { dotfiles: 'allow' }))
     server.use(bodyParser.json())
 
     server.get('/a/:slug', (req, res) => {
