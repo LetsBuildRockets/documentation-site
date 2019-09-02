@@ -17,13 +17,15 @@ class Article extends React.Component {
     return (
       <Layout>
         <h1>{this.state.article.title}</h1>
-        {this.state.article.author_url_slug !== undefined && (
+        {this.state.article.author_url_slug !== undefined ? (
           <h3>By: {this.state.article.author_url_slug ? (
             <a href = {`/a/${this.state.article.author_url_slug}`}>{this.state.article.author_first_name} {this.state.article.author_last_name}</a>
           ) : (
             `${this.state.article.author_first_name} ${this.state.article.author_last_name}`
           )}
           </h3>
+        ):(
+          <div>loading...</div>
         )}
         {this.props.loggedin && (<Link as={`/edit/${this.state.article.url_slug}`} href={`/edit?slug=${this.state.article.url_slug}`}><a>Edit</a></Link>)}
         <p>{this.state.article.content}</p>

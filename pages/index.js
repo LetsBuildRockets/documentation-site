@@ -13,13 +13,17 @@ class Index extends React.Component {
     return (
        <Layout>
         <h1>Articles</h1>
-        <ul>
-          {this.state.articles.map((article) => (
-            <li key={article.id}>
-              <Link as={`/a/${article.url_slug}`} href={`/article?slug=${article.url_slug}`}><a>{article.title}</a></Link> - {article.abstract}
-            </li>
-          ))}
-        </ul>
+        {this.state.articles.length > 0 ? (
+          <ul>
+            {this.state.articles.map((article) => (
+              <li key={article.id}>
+                <Link as={`/a/${article.url_slug}`} href={`/article?slug=${article.url_slug}`}><a>{article.title}</a></Link> - {article.abstract}
+              </li>
+            ))}
+          </ul>
+        ):(
+          <div>loading...</div>
+        )}
       </Layout>
     )
   }
