@@ -27,6 +27,7 @@ class Layout extends React.Component {
       fetch(`https://${window.location.host}/api/users/me`,{headers: { 'Content-Type': 'application/json' }}).then((res) => {
         return res.json();
       }).then((data) => {
+        // console.log('useredata:', data)
         if (data && data.error) {
           return { 'error': 'Something went wrong' }
         }
@@ -41,7 +42,7 @@ class Layout extends React.Component {
   componentDidMount() {
     this.setState({host: window.location.host})
     this.amiloggedin().then((loggedin) => {
-      console.log("loggedin:", loggedin);
+      // console.log("loggedin:", loggedin);
       this.setState({loggedin: loggedin})
     })
   }

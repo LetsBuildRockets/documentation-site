@@ -3,18 +3,41 @@ import Link from 'next/link'
 import fetch from 'isomorphic-unfetch'
 
 export default class extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+
+    };
+    this.handles = {
+      submitHandle: this.submitHandle.bind(this),
+      username: React.createRef(),
+      password: React.createRef()
+    }
+  }
+
+  submitHandle(event) {
+    event.preventDefault();
+    var newUserRequest = new XMLHttpRequest()
+    newUserRequest.open('POST', `https://${window.location.host}/api/login`, false)
+    newUserRequest.setRequestHeader('Content-type', 'application/json')
+    newUserRequest.send(JSON.stringify({ username: this.handles.username.current.value, password: this.handles.password.current.value}))
+    window.alert(newUserRequest.responseText)
+    console.log(newUserRequest.status)
+    if (newUserRequest.status === 201) {
+      window.location.href = '/'
+    }
+  }
 
   render() {
     return (
       <Layout>
         <h1>Log In</h1>
         <div>
-          <form id="login">
-            Username: <input type="text" id="username" name="username" placeholder="jackyd"></input><br />
-            Password: <input type="password" id="password" name="password" placeholder="*****"></input><br />
+          <form id="login" onSubmit={this.handles.submitHandle}>
+            Username: <input type="text" id="username" name="username" placeholder="jackyd" ref={this.handles.username}></input><br />
+            Password: <input type="password" id="password" name="password" placeholder="*****" ref={this.handles.password}></input><br />
 
-            <input id="login_submit" type="button" value="Submit"></input>
-            <script src='/scripts/loginScript.js' />
+            <input id="login_submit" type="submit" value="Submit"></input>
           </form>
         </div>
       </Layout>
@@ -22,13 +45,6 @@ export default class extends React.Component {
   }
 
   componentDidMount() {
-    // const script1 = document.createElement("script");
-    // script1.src = "/scripts/loginScript.js";
-    console.log("login script")
-    //document.body.appendChild(script1);
-    // document.getElementById('login_submit').onclick = login_submit;
-    // this.setState({
-    //   submitme: login_submit
-    // })
+
   }
 }
