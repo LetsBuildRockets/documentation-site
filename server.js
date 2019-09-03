@@ -52,6 +52,14 @@ var auth = function (req, res, next) {
   }
 }
 
+var authAdmin = function (req, res, next) {
+  if (req.session && req.cookies.user_sid && req.session.admin) {
+    return next()
+  } else {
+    return res.sendStatus(401)
+  }
+}
+
 app.prepare()
   .then(() => {
     const server = express()
@@ -103,7 +111,7 @@ app.prepare()
       app.render(req, res, actualPage, queryParams)
     })
 
-    server.get('/api/users', auth, (req, res) => {
+    server.get('/api/users', authAdmin, (req, res) => {
       db.allUsers().then((users) => {
         res.json(users)
       })
@@ -128,9 +136,7 @@ app.prepare()
     })
 
     server.get('/api/users/me', (req, res) => {
-      console.log('me request ', req.session)
       if (typeof req.session.user !== 'undefined') {
-        console.log('user data:' + req.session.user)
         res.json(req.session.user)
       } else {
         res.json({})
@@ -164,7 +170,7 @@ app.prepare()
     })
 
     server.post('/api/login', (req, res) => {
-      console.log(req.body)
+      // console.log(req.body)
 
       db.authUser(req.body.username, req.body.password, (user) => {
         if (user.length > 0) {
@@ -173,7 +179,7 @@ app.prepare()
           req.session.user.first_name = user[0].first_name
           req.session.user.last_name = user[0].last_name
           req.session.admin = true
-          console.log(req.session)
+          // console.log(req.session)
           res.status(201)
           res.send('Login Success!')
         } else {
