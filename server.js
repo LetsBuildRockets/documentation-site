@@ -63,7 +63,7 @@ var authAdmin = function (req, res, next) {
 app.prepare()
   .then(() => {
     const server = express()
-    // const staticServer = server
+    const staticServer = express()
     https.createServer({
       key: (fs.existsSync(process.env.PRI_KEY_FILE) ? fs.readFileSync(process.env.PRI_KEY_FILE, 'utf8') : ''),
       cert: (fs.existsSync(process.env.CERT_FILE) ? fs.readFileSync(process.env.CERT_FILE, 'utf8') : ''),
@@ -94,10 +94,11 @@ app.prepare()
 
     server.use(cors())
     server.use(express.static('static'))
-    // staticServer.use(express.static('static'))
-    // staticServer.use('/.well-known', express.static('.well-known'), serveIndex('.well-known'));
-    // server.use(express.static('.well-known', { dotfiles: 'allow' }))
     server.use(bodyParser.json())
+    server.use('/.well-known', express.static('.well-known'), serveIndex('.well-known'));
+
+    staticServer.use('/static', express.static('static'), serveIndex('static'));
+    staticServer.use('/.well-known', express.static('.well-known'), serveIndex('.well-known'));
 
     server.get('/a/:slug', (req, res) => {
       const actualPage = '/article'
@@ -248,10 +249,10 @@ app.prepare()
       return handle(req, res)
     })
 
-    // staticServer.listen(port, (err) => {
-    //   if (err) throw err
-    //   console.log(`> Ready on http://${host}:${port}`)
-    // })
+    staticServer.listen(port, (err) => {
+      if (err) throw err
+      console.log(`> Ready on http://${host}:${port}`)
+    })
   })
   .catch((ex) => {
     console.error(ex.stack)
