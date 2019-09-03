@@ -6,7 +6,7 @@
   "scripts": {
     "build": "next build",
     "start": "node server.js",
-    "start_production": "NODE_ENV=production node server.js"
+    "start_production": "next build && NODE_ENV=production node server.js"
   },
   "dependencies": {
     "async": "^2.5.0",
